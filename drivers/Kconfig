@@ -1,0 +1,119 @@
+menuconfig LORA_BASICS_MODEM
+    bool "LoRa Basics Modem library"
+    depends on LR11XX_LIB
+    depends on REBOOT
+    depends on SETTINGS
+    help
+        This library adds the lora basics modem.
+        Make sure you compile whit a libc implementation that
+        includes floorf, such as NEWLIB_LIBC.
+        Also make sure some source of randomness is used.
+
+
+if LORA_BASICS_MODEM
+
+config LORA_BASICS_MODEM_USE_GNSS
+    bool "Enable gnss almanac update features"
+    default n
+    help
+      Enable if almanac updates via LoRa Cloud are required.
+
+choice
+	prompt "Cryptography engine"
+	default LORA_BASICS_MODEM_CRYPTOGRAPHY_LR11XX
+	help
+	  Specify which crypto engine will be used
+
+config LORA_BASICS_MODEM_CRYPTOGRAPHY_SOFT
+	bool "Use software based cryptography module"
+
+config LORA_BASICS_MODEM_CRYPTOGRAPHY_LR11XX
+	bool "Use lr11xx hardware cryptography module"
+
+endchoice
+
+choice
+	prompt "LoRaWAN Regional Parameters version"
+	default LORA_BASICS_MODEM_RP2_103
+	help
+	  Specify which Regional Parameters version to use
+
+config LORA_BASICS_MODEM_RP2_101
+	bool "Use RP 1.0.1"
+
+config LORA_BASICS_MODEM_RP2_103
+	bool "Use RP 1.0.3"
+
+endchoice
+
+config LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+    bool "Enable all supported regions"
+    default y
+
+config LORA_BASICS_MODEM_REGION_AS_923
+    bool "Enable AS_923 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_AU_915
+    bool "Enable AU_915 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_CN_470
+    bool "Enable CN_470 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_CN_470_RP_1_0
+    bool "Enable CN_470_RP_1_0 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_EU_868
+    bool "Enable EU_868 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_IN_865
+    bool "Enable IN_865 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_KR_920
+    bool "Enable KR_920 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_RU_864
+    bool "Enable RU_864 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_US_915
+    bool "Enable US_915 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_WW_2G4
+    bool "Enable WW_2G4 region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_D2D
+    bool "Enable class B device to device protocol support"
+    default n
+
+config LORA_BASICS_MODEM_MULTICAST
+    bool "Enable multicast support"
+    default n
+
+config LORA_BASICS_MODEM_STREAM
+    bool "Enable buffer stream support"
+    default n
+
+config LORA_BASICS_MODEM_FILE_UPLOAD
+    bool "Enable file upload support"
+    default n
+
+config LORA_BASICS_MODEM_TIME_SYNC
+    bool "Enable time sync support"
+    default n
+
+module = LORA_BASICS_MODEM
+module-str = LORA_BASICS_MODEM
+source "subsys/logging/Kconfig.template.log_config"
+
+rsource "apps_common/Kconfig"
+
+endif # LORA_BASICS_MODEM
