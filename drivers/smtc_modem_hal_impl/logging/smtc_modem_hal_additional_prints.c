@@ -19,6 +19,24 @@ LOG_MODULE_REGISTER(smtc_modem, CONFIG_LORA_BASICS_MODEM_LOG_LEVEL);
 
 #define PRINT_BUFFER_SIZE 255
 
+/**
+ * @brief Check if string is "useless"
+ *
+ * This is a very opinionated filter for Semtech's logging, since we do not require prints such as
+ *
+ * *****************************
+ * *  TX DONE                 *
+ * *****************************
+ *
+ * I would prefer just a simple
+ * TX DONE
+ *
+ * This function returns true for all strings that only contain spaces, starts and new lines
+ *
+ * @param[in] text The text to check
+ * @return true If string is useless and should not be printed
+ * @return false If string i not useless and should be printed
+ */
 static bool prv_string_is_useless(char *text)
 {
 	for (int i = 0; i < strlen(text); i++) {
@@ -29,6 +47,19 @@ static bool prv_string_is_useless(char *text)
 	return true;
 }
 
+/**
+ * @brief Trims a string
+ *
+ * This is a very opinionated filter for Semtech's logging (see above)
+ *
+ * This function "removes" spaces at the beginning and end of strings.
+ *
+ * The returned string is just a pointer to a substring of the original string. A NULL
+ * terminator is also inserted early into the string if spaces at the end should be trimmed.
+ *
+ * @param[in] text The text to trim
+ * @return char* The trimmed text
+ */
 static char *prv_string_trim(char *text)
 {
 	char *end;

@@ -225,6 +225,9 @@ static int prv_set(const char *name, size_t len, settings_read_cb read_cb, void 
 	int err = read_cb(cb_arg, prv_load_into, prv_load_size);
 	if (err < 0) {
 		LOG_ERR("Unable to load %s", name);
+		/* TODO: We do no error checking here. This never seems to fail in the way we are
+		 * currently using the settings module. If this start to fail in some project,
+		 * consider adding some error handling. */
 	}
 	LOG_INF("Loaded %s", name);
 
@@ -436,14 +439,20 @@ uint8_t smtc_modem_hal_get_battery_level(void)
 /* This is called when DM info required is */
 int8_t smtc_modem_hal_get_temperature(void)
 {
-	uint32_t temperature;
+	int32_t temperature;
 	int ret = prv_get_temperature_cb(&temperature);
 
 	if (ret) {
 		return -128;
 	}
 
-	return (int8_t)temperature;
+	if (temperature < -128) {
+		return -128;
+	} else if (temperature > 127) {
+		return 127;
+	} else {
+		return (int8_t)temperature;
+	}
 }
 
 /* This is called when DM info required is */
@@ -458,7 +467,13 @@ uint8_t smtc_modem_hal_get_voltage(void)
 	}
 
 	/* Step used in Semtechs hal is 1/50V == 20 mV */
-	return voltage / 20;
+	uint32_t converted = voltage / 20;
+
+	if (converted > 255) {
+		return 255;
+	} else {
+		return (uint8_t)converted;
+	}
 }
 
 /* ------------ Misc ------------*/
