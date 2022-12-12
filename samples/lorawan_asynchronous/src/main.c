@@ -123,10 +123,6 @@ void main(void)
 	 */
 
 	while (1) {
-		/* Execute modem runtime, this function must be recalled in sleep_time_ms or sooner
-		 */
-		uint32_t sleep_time_ms = smtc_modem_run_engine();
-
 		/* Check if the button has been pressed */
 		if (user_button_pressed == true) {
 			user_button_pressed = false;
@@ -138,6 +134,10 @@ void main(void)
 				LOG_WRN("Device has not joined a network yet, try again later.");
 			}
 		}
+
+		/* Execute modem runtime, this function must be recalled in sleep_time_ms or sooner
+		 */
+		uint32_t sleep_time_ms = smtc_modem_run_engine();
 
 		LOG_INF("Sleeping for %d ms", sleep_time_ms);
 		k_sem_take(&main_sleep_sem, K_MSEC(sleep_time_ms));
