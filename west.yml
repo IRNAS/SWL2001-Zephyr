@@ -66,7 +66,7 @@ manifest:
           # - fatfs
           # - fff
           - hal_nordic
-          - hal_st  # Hal for ST's sensors, not for MCU's
+          - hal_st # Hal for ST's sensors, not for MCU's
           # - liblc3codec
           # - libmetal
           # - littlefs
@@ -87,8 +87,8 @@ manifest:
           # - zscilib
 
     # irnas drivers and modules
-    - name: irnas-versioninfo-lib
-      repo-path: irnas-versioninfo-lib
-      path: irnas/irnas-versioninfo-lib
+    - name: SWDR001-Zephyr
+      repo-path: SWDR001-Zephyr
+      path: irnas/SWDR001-Zephyr
       remote: irnas
-      revision: v1.1.0
+      revision: dev

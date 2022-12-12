@@ -1,0 +1,12 @@
+config LORA_BASICS_MODEM_PRINTERS
+    bool "Enable printer helpers"
+    default y
+    depends on LOG || PRINTK
+    help
+        Enable this to get acecss to functions that take a lora basics
+        modem enum and return a static string, so it may be printed/logged
+
+
+module = SMTC_APP
+module-str = smtc_app
+source "subsys/logging/Kconfig.template.log_config"
