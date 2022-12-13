@@ -105,19 +105,19 @@ uint32_t smtc_modem_hal_get_time_in_s(void)
 	return (uint32_t)(time_ms / 1000);
 }
 
+int32_t smtc_modem_hal_get_time_compensation_in_s(void)
+{
+	/* There is no compensation going on */
+	return 0;
+}
+
 /* There is no difference in zephyr between "uncompensated" and "compensated" time,
  * so we just use the same implementation.
  * Semtech does something similar in their HAl for stm
  */
 uint32_t smtc_modem_hal_get_compensated_time_in_s(void)
 {
-	return smtc_modem_hal_get_time_in_s();
-}
-
-int32_t smtc_modem_hal_get_time_compensation_in_s(void)
-{
-	/* There is no compensation going on */
-	return 0;
+	return smtc_modem_hal_get_time_in_s() + smtc_modem_hal_get_time_compensation_in_s();
 }
 
 uint32_t smtc_modem_hal_get_time_in_ms(void)
