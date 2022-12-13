@@ -19,13 +19,13 @@ extern "C" {
 /**
  * @brief Get battery level callback
  *
- * @param [out] value The battery level (in %, where 100% means full battery). The application
- * should set this to the most recent battery level it has avaliable
+ * @param [out] value The battery level (in permille (‰) , where 1000 ‰ means full battery). The
+ * application should set this to the most recent battery level it has avaliable
  *
  * @return int 0 if the battery level was set, or a negative error code if no valid battery
  * level is available
  */
-typedef int (*get_battery_level_cb_t)(uint8_t *value);
+typedef int (*get_battery_level_cb_t)(uint32_t *value);
 
 /**
  * @brief Get temperature callback

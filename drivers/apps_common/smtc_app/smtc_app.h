@@ -234,13 +234,14 @@ struct smtc_app_env_callbacks {
 	/**
 	 * @brief Get battery level callback
 	 *
-	 * @param [out] battery_level The battery level (in %, where 100% means full battery). The
-	 * application should set this to the most recent battery level it has avaliable
+	 * @param [out] battery_level The battery level in permilles (‰) (where 1000‰ means full
+	 * battery). The application should set this to the most recent battery level it has
+	 * avaliable
 	 *
 	 * @return int 0 if the battery level was set, or a negative error code if no valid battery
 	 * level is available
 	 */
-	int (*get_battery_level)(uint8_t *battery_level);
+	int (*get_battery_level)(uint32_t *battery_level);
 
 	/**
 	 * @brief Get temperature callback
