@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Fixed
 
 -   Log level for printing trace array (set to debug).
+-   Battery level to use correct scaling.
+
+### Changed
+
+-    Refactor HAL time management to use compensation (Note that the compensation value is still 0 by default).
+
 
 ## [1.0.0] - 2022-12-12
 
