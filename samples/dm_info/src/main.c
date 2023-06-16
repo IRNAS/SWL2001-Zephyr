@@ -26,7 +26,7 @@ LOG_MODULE_REGISTER(main);
 static void on_modem_reset(uint16_t reset_count);
 static void on_modem_network_joined(void);
 
-static int get_battery_level(uint8_t *battery_level);
+static int get_battery_level(uint32_t *battery_level);
 static int get_temperature(int32_t *battery_level);
 static int get_voltage_level(uint32_t *battery_level);
 
@@ -181,11 +181,12 @@ static void on_modem_network_joined(void)
  * if the callbacks are not set, default (minumum) values will be used.
  *
  */
-static int get_battery_level(uint8_t *battery_level)
+static int get_battery_level(uint32_t *battery_level)
 {
 	/* we simulate battery draining here */
-	static uint8_t battery_percent = 100;
-	*battery_level = battery_percent--;
+	static uint32_t battery_promiles = 1000;
+	*battery_level = battery_promiles;
+	battery_promiles -= 10;
 
 	return 0;
 }

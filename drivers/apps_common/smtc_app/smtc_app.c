@@ -92,7 +92,7 @@ static uint32_t prv_convert_gps_to_utc_time(uint32_t gps_time_s)
 /**
  * @brief Callback for modem hal
  */
-static int prv_get_battery_level_cb(uint8_t *value)
+static int prv_get_battery_level_cb(uint32_t *value)
 {
 	if (!prv_env_callbacks || !prv_env_callbacks->get_battery_level) {
 		return -1;

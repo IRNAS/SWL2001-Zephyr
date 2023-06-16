@@ -105,19 +105,19 @@ uint32_t smtc_modem_hal_get_time_in_s(void)
 	return (uint32_t)(time_ms / 1000);
 }
 
+int32_t smtc_modem_hal_get_time_compensation_in_s(void)
+{
+	/* There is no compensation going on */
+	return 0;
+}
+
 /* There is no difference in zephyr between "uncompensated" and "compensated" time,
  * so we just use the same implementation.
  * Semtech does something similar in their HAl for stm
  */
 uint32_t smtc_modem_hal_get_compensated_time_in_s(void)
 {
-	return smtc_modem_hal_get_time_in_s();
-}
-
-int32_t smtc_modem_hal_get_time_compensation_in_s(void)
-{
-	/* There is no compensation going on */
-	return 0;
+	return smtc_modem_hal_get_time_in_s() + smtc_modem_hal_get_time_compensation_in_s();
 }
 
 uint32_t smtc_modem_hal_get_time_in_ms(void)
@@ -426,14 +426,19 @@ uint32_t smtc_modem_hal_get_radio_tcxo_startup_delay_ms(void)
 /* This is called when LoRa Cloud sends a device status request */
 uint8_t smtc_modem_hal_get_battery_level(void)
 {
-	uint8_t battery;
+	uint32_t battery;
 	int ret = prv_get_battery_level_cb(&battery);
 
 	if (ret) {
 		return 0;
 	}
 
-	return battery;
+	if (battery > 1000) {
+		return 255;
+	}
+
+	/* scale 0-1000 to 0-255 */
+	return (uint8_t)((float)battery * 0.255);
 }
 
 /* This is called when DM info required is */
