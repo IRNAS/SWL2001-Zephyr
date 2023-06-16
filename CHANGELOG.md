@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-06-16
+
 ### Fixed
 
--  Log level for printing trace array (set to debug).
+-   Log level for printing trace array (set to debug).
+-   Battery level to use correct scaling.
+
+### Changed
+
+-    Refactor HAL time management to use compensation (Note that the compensation value is still 0 by default).
+
 
 ## [1.0.0] - 2022-12-12
 
@@ -33,6 +41,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.1...HEAD
+
+[1.0.1]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.0...v1.0.1
 
 [1.0.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/52a1e1e0301ef9fc9b7c1418cee0aed9ef185e0d...v1.0.0
