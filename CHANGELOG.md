@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Fixed
+
+-  Log level for printing trace array (set to debug).
+
 ## [1.0.0] - 2022-12-12
 
 ### Added

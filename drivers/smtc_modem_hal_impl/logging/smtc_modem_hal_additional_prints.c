@@ -180,6 +180,6 @@ void smtc_modem_hal_print_trace_array_dbg(char *msg, uint8_t *array, uint32_t le
 {
 #ifdef CONFIG_LOG
 	prv_string_trim(msg);
-	LOG_HEXDUMP_INF(array, len, msg);
+	LOG_HEXDUMP_DBG(array, len, msg);
 #endif /* CONFIG_LOG */
 }
