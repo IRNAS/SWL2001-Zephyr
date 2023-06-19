@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## Changed
+
+-   Update to NCS 2.2.0.
+-   Disable compiler warnings for Semtech's code.
+
 ## [1.0.1] - 2023-06-16
 
 ### Fixed
