@@ -44,9 +44,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/__assert.h>
-#include <zephyr/zephyr.h>
 
 #include <smtc_basic_modem_lr11xx_api_extension.h>
 #include <smtc_modem_api.h>
