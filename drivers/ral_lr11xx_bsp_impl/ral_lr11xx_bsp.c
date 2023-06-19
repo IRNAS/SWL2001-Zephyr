@@ -9,7 +9,7 @@
 #include <ral_lr11xx_bsp.h>
 
 #include <zephyr/device.h>
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "lr11xx_pa_pwr_cfg.h"
 

@@ -16,8 +16,8 @@
 #include <smtc_modem_hal.h>
 
 #include <zephyr/device.h>
+#include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-#include <zephyr/zephyr.h>
 
 LOG_MODULE_REGISTER(main);
 

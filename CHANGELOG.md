@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-06-19
+
+## Changed
+
+-   Update to NCS 2.2.0.
+-   Disable compiler warnings for Semtech's code.
+
 ## [1.0.1] - 2023-06-16
 
 ### Fixed
@@ -15,8 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 
--    Refactor HAL time management to use compensation (Note that the compensation value is still 0 by default).
-
+-   Refactor HAL time management to use compensation (Note that the compensation value is still 0 by default).
 
 ## [1.0.0] - 2022-12-12
 
@@ -41,7 +47,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.1.0...HEAD
+
+[1.1.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.1...v1.1.0
 
 [1.0.1]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.0...v1.0.1
 

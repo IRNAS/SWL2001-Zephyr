@@ -9,11 +9,11 @@
 #include <smtc_modem_hal.h>
 #include <smtc_modem_hal_init.h>
 
+#include <zephyr/kernel.h>
 #include <zephyr/random/rand32.h>
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/__assert.h>
 #include <zephyr/sys/reboot.h>
-#include <zephyr/zephyr.h>
 
 #include <lr11xx_board.h>
 #include <lr11xx_radio.h>
@@ -357,19 +357,17 @@ int32_t smtc_modem_hal_get_signed_random_nb_in_range(const int32_t val_1, const 
 
 void lr11xx_event_cb(const struct device *dev)
 {
+	/* Due to the way the lr11xx driver is implemented, this is called from the global workq */
 	prv_smtc_modem_hal_radio_irq_callback(prv_smtc_modem_hal_radio_irq_context);
 }
 
 void smtc_modem_hal_irq_config_radio_irq(void (*callback)(void *context), void *context)
 {
-	/* Unsure if this is correct:
-	 *
-	 * We are using lr11xx here, since the pin callback is implemented there
-	 */
+	/* save callback function and context */
 	prv_smtc_modem_hal_radio_irq_context = context;
 	prv_smtc_modem_hal_radio_irq_callback = callback;
 
-	/* enable callback */
+	/* enable callback via lr11xx driver*/
 	lr11xx_board_attach_interrupt(prv_lr11xx_dev, lr11xx_event_cb);
 	lr11xx_board_enable_interrupt(prv_lr11xx_dev);
 }
