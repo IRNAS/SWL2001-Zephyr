@@ -18,7 +18,7 @@ LoRa Basics Modem port for Zephyr.
       repo-path: SWL2001-Zephyr
       path: irnas/SWL2001-Zephyr
       remote: irnas
-      revision: v1.0.0  # or some other revision/git branch/git hash
+      revision: <release-tag | branch | commit hash>
     ```
 
 3. Then run `west update` from your project directory.
