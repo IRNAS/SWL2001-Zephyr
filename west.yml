@@ -16,34 +16,34 @@ manifest:
       remote: nrfconnect
       # IMPORTANT: When changing NCS revision you need to change revision of
       # Zephyr project below so it matches.
-      revision: v2.1.0
+      revision: v2.2.0
       import:
         name-allowlist:
           # Ignore NCS private repos, keep this list sorted alphabetically.
+          # - ant
+          # - azure-sdk-for-c
           # - cirrus
-          # - cjson
+          - cjson
           # - cmock
           # - find-my
           # - homekit
           # - matter
-          # - mbedtls-nrf
+          - mbedtls-nrf
           - mcuboot
-          # - memfault-firmware-sdk
+          - memfault-firmware-sdk
           # - nrf-802154
           - nrfxlib
           # - openthread
-          # - sdk-lc3
+          # - sdk-hostap
           - tfm-mcuboot
           - trusted-firmware-m
-          # - unity
-          - zcbor
           # Ignore zephyr repo as it is added below manually
           # - zephyr
 
     - name: zephyr
       remote: nrfconnect
       repo-path: sdk-zephyr
-      revision: v3.1.99-ncs1
+      revision: v3.2.99-ncs1
       import:
         # In addition to the zephyr repository itself, NCS also
         # imports the contents of zephyr/west.yml at the above
@@ -60,14 +60,14 @@ manifest:
           # - TraceRecorderSource
           # - canopennode
           # - chre
-          # - civetweb
           - cmsis
           # - edtt
           # - fatfs
           # - fff
           - hal_nordic
           - hal_st # Hal for ST's sensors, not for MCU's
-          # - liblc3codec
+          # - hal_wurthelektronik
+          # - liblc3
           # - libmetal
           # - littlefs
           # - loramac-node
@@ -79,11 +79,14 @@ manifest:
           # - net-tools
           - nrf_hw_models
           # - open-amp
+          # - picolibc
           # - psa-arch-tests
           - segger
           # - tinycbor
           - tinycrypt
           - tf-m-tests
+          # - uoscore-uedhoc
+          - zcbor
           # - zscilib
 
     # irnas drivers and modules
