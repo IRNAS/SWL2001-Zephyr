@@ -183,6 +183,18 @@ zephyr_include_directories(
 
 #  ----- added by us -----
 
+# Disable all warnings for Semtech code.
+#
+# Zephyr is compiled with a lot more warnings enabled than the basics modem.
+# Since we copy the Basics Modem directly with no modifications, the warnings clog up
+# the build output in our applications.
+#
+# To disable the warnings from the Basics Modem we need to pass "-w" to the compiler, this is done with below line.
+zephyr_library_compile_options(-w)
+
+# start new zephyr library for our code (warnings are enabled again for our hal-impl code)
+zephyr_library_named(smtc_hal)
+
 # hal implementation
 zephyr_library_sources(smtc_modem_hal_impl/smtc_modem_hal.c)
 # hal init
