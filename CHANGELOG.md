@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-06-20
+
+### Fixed
+
+-   `smtc_modem_hal_print_trace_array_*` functions incorrectly trimming immutable strings and causing a hard fault.
+
 ## [1.1.0] - 2023-06-19
 
 ## Changed
@@ -47,7 +53,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.1.1...HEAD
+
+[1.1.1]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.1.0...v1.1.1
 
 [1.1.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.0.1...v1.1.0
 
