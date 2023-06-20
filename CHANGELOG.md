@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Fixed
+
+- `smtc_modem_hal_print_trace_array_*` functions incorrectly trimming immutable strings and causing a hard fault.
+
 ## [1.1.0] - 2023-06-19
 
 ## Changed

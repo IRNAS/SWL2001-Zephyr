@@ -171,7 +171,6 @@ void smtc_modem_hal_print_trace_wrn(const char *fmt, ...)
 void smtc_modem_hal_print_trace_array_inf(char *msg, uint8_t *array, uint32_t len)
 {
 #ifdef CONFIG_LOG
-	prv_string_trim(msg);
 	LOG_HEXDUMP_INF(array, len, msg);
 #endif /* CONFIG_LOG */
 }
@@ -179,7 +178,6 @@ void smtc_modem_hal_print_trace_array_inf(char *msg, uint8_t *array, uint32_t le
 void smtc_modem_hal_print_trace_array_dbg(char *msg, uint8_t *array, uint32_t len)
 {
 #ifdef CONFIG_LOG
-	prv_string_trim(msg);
 	LOG_HEXDUMP_DBG(array, len, msg);
 #endif /* CONFIG_LOG */
 }
