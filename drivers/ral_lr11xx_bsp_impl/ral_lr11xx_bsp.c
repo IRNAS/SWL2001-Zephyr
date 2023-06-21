@@ -15,6 +15,7 @@
 
 #include <smtc_modem_api.h>
 
+#include <lr11xx_bindings_def.h>
 #include <lr11xx_board.h>
 #include <lr11xx_radio.h>
 
@@ -168,11 +169,13 @@ void ral_lr11xx_bsp_get_rf_switch_cfg(const void *context,
 	*rf_switch_cfg = config->rf_switch_cfg;
 }
 
-/* NOTE: this implementation is copied from Semtech */
 void ral_lr11xx_bsp_get_tx_cfg(const void *context,
 			       const ral_lr11xx_bsp_tx_cfg_input_params_t *input_params,
 			       ral_lr11xx_bsp_tx_cfg_output_params_t *output_params)
 {
+	const struct device *lr11xx = context;
+	const struct lr11xx_hal_context_cfg_t *config = lr11xx->config;
+
 	int8_t modem_tx_offset;
 
 	// get modem_configured tx power offset
@@ -190,9 +193,22 @@ void ral_lr11xx_bsp_get_tx_cfg(const void *context,
 	if (input_params->freq_in_hz >= 2400000000) {
 		pa_type = LR11XX_WITH_HF_PA;
 	} else {
-		// Modem is acting in subgig band: use LP/HP PA (both LP and HP are connected on
-		// lr11xx evk board)
-		pa_type = LR11XX_WITH_LF_LP_HP_PA;
+		__ASSERT(config->lf_tx_path_options == LR11XX_TX_PATH_LF_LP ||
+				 config->lf_tx_path_options == LR11XX_TX_PATH_LF_HP ||
+				 config->lf_tx_path_options == LR11XX_TX_PATH_LF_LP_HP,
+			 "LF TX path not configured correctly");
+
+		/* Based on DTS configuration, allow only placed RF paths to be used. */
+		if (config->lf_tx_path_options == LR11XX_TX_PATH_LF_LP) {
+			/* Low power path only */
+			pa_type = LR11XX_WITH_LF_LP_PA;
+		} else if (config->lf_tx_path_options == LR11XX_TX_PATH_LF_HP) {
+			/* High power path only */
+			pa_type = LR11XX_WITH_LF_HP_PA;
+		} else {
+			/* Both paths */
+			pa_type = LR11XX_WITH_LF_LP_PA;
+		}
 	}
 
 	// call the configuration function

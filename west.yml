@@ -94,4 +94,4 @@ manifest:
       repo-path: SWDR001-Zephyr
       path: irnas/SWDR001-Zephyr
       remote: irnas
-      revision: v1.3.0
+      revision: v1.4.0
