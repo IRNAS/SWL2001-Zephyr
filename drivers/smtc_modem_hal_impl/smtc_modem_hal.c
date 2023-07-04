@@ -50,6 +50,7 @@ K_WORK_DEFINE(prv_smtc_modem_hal_timer_work, prv_smtc_modem_hal_timer_work_handl
 /* context and callback for the event pin interrupt */
 static void *prv_smtc_modem_hal_radio_irq_context;
 static void (*prv_smtc_modem_hal_radio_irq_callback)(void *context);
+static bool prv_skip_next_radio_irq;
 
 /* Context for loading from persistant storage */
 static uint8_t *prv_load_into;
@@ -355,9 +356,30 @@ int32_t smtc_modem_hal_get_signed_random_nb_in_range(const int32_t val_1, const 
 
 /* ------------ Radio env management ------------*/
 
-void lr11xx_event_cb(const struct device *dev)
+/**
+ * @brief Called when the lr11xx event pin interrupt is triggered.
+ *
+ * If CONFIG_LR11XX_EVENT_TRIGGER_GLOBAL_THREAD=y, this is called in the global workq.
+ * If CONFIG_LR11XX_EVENT_TRIGGER_OWN_THREAD=y, this is called in the lr11xx event thread.
+ *
+ * @param[in] dev The lr11xx device.
+ */
+void prv_lr11xx_event_cb(const struct device *dev)
 {
-	/* Due to the way the lr11xx driver is implemented, this is called from the global workq */
+	/* This logic is based on our understanding of section 5.24 of the porting guide.
+	 * NOTE:
+	 * In simple (init, join, uplink) tests smtc_modem_hal_radio_irq_clear_pending is
+	 * never called. This means that prv_skip_next_radio_irq is never true and no callbacks are
+	 * ever skipped.
+	 * This is why the LOG bellow is a warning. If it gets printed and you are encountering
+	 * issues, this might be the culprit. */
+	if (prv_skip_next_radio_irq) {
+		LOG_WRN("Skipping radio irq");
+		prv_skip_next_radio_irq = false;
+		return;
+	}
+
+	/* Due to the way the lr11xx driver is implemented, this is called from the global workq. */
 	prv_smtc_modem_hal_radio_irq_callback(prv_smtc_modem_hal_radio_irq_context);
 }
 
@@ -367,14 +389,15 @@ void smtc_modem_hal_irq_config_radio_irq(void (*callback)(void *context), void *
 	prv_smtc_modem_hal_radio_irq_context = context;
 	prv_smtc_modem_hal_radio_irq_callback = callback;
 
-	/* enable callback via lr11xx driver*/
-	lr11xx_board_attach_interrupt(prv_lr11xx_dev, lr11xx_event_cb);
+	/* enable callback via lr11xx driver */
+	lr11xx_board_attach_interrupt(prv_lr11xx_dev, prv_lr11xx_event_cb);
 	lr11xx_board_enable_interrupt(prv_lr11xx_dev);
 }
 
 void smtc_modem_hal_radio_irq_clear_pending(void)
 {
-	/* Nothing to do here, this is handled by Zephyr */
+	LOG_DBG("Clear pending radio irq");
+	prv_skip_next_radio_irq = true;
 }
 
 void smtc_modem_hal_start_radio_tcxo(void)
