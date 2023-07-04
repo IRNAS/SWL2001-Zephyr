@@ -377,42 +377,24 @@ void smtc_modem_hal_radio_irq_clear_pending(void)
 	/* Nothing to do here, this is handled by Zephyr */
 }
 
-static void prv_tcxo_set(bool enable)
-{
-	const struct lr11xx_hal_context_cfg_t *config = prv_lr11xx_dev->config;
-	const struct lr11xx_hal_context_tcxo_cfg_t tcxo_cfg = config->tcxo_cfg;
-
-	/* if ther is no tcxo, exit early */
-	if (!tcxo_cfg.has_tcxo) {
-		return;
-	}
-
-	/* a timeout of 0 means "disable" */
-	uint32_t timeout_rtc_step = 0;
-	if (enable) {
-		timeout_rtc_step = lr11xx_radio_convert_time_in_ms_to_rtc_step(tcxo_cfg.timeout_ms);
-	}
-
-	int ret = lr11xx_system_set_tcxo_mode(prv_lr11xx_dev, tcxo_cfg.supply, timeout_rtc_step);
-	if (ret) {
-		LOG_ERR("Failed to configure TCXO.");
-	}
-}
-
-/* NOTE: since not all lora radios support tcxo, this must be handled in the modem HAL, and not in
- * the lr11xx hal */
 void smtc_modem_hal_start_radio_tcxo(void)
 {
-	prv_tcxo_set(true);
+	/* We only support TCXO's that are wired to the LR11XX. In such cases, this function must be
+	 * empty. See 5.25 of the porting guide. */
 }
 
 void smtc_modem_hal_stop_radio_tcxo(void)
 {
-	prv_tcxo_set(false);
+	/* We only support TCXO's that are wired to the LR11XX. In such cases, this function must be
+	 * empty. See 5.26 of the porting guide. */
 }
 
 uint32_t smtc_modem_hal_get_radio_tcxo_startup_delay_ms(void)
 {
+	/* From the porting guide:
+	 * If the TCXO is configured by the RAL BSP to start up automatically, then the value used
+	 * here should be the same as the startup delay used in the RAL BSP.
+	 */
 	const struct lr11xx_hal_context_cfg_t *config = prv_lr11xx_dev->config;
 	const struct lr11xx_hal_context_tcxo_cfg_t tcxo_cfg = config->tcxo_cfg;
 
