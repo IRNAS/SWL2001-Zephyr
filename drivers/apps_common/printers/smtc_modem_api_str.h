@@ -42,6 +42,12 @@
 extern "C" {
 #endif
 
+/* If printers are disabled, the function bellow will lack an implementation. Since they are mostly
+ * used inline in LOG_* calls, we replace them with macros that desugar to "" (empty string), so the
+ * LOG call is still valid.
+ */
+#ifdef CONFIG_LORA_BASICS_MODEM_PRINTERS
+
 const char *smtc_modem_return_code_to_str(const smtc_modem_return_code_t value);
 const char *smtc_modem_adr_profile_to_str(const smtc_modem_adr_profile_t value);
 const char *smtc_modem_class_to_str(const smtc_modem_class_t value);
@@ -66,6 +72,35 @@ const char *smtc_modem_event_user_radio_access_status_to_str(const smtc_modem_ev
 const char *smtc_modem_class_b_ping_slot_periodicity_to_str(const smtc_modem_class_b_ping_slot_periodicity_t value);
 const char *smtc_modem_frame_pending_bit_status_to_str(const smtc_modem_frame_pending_bit_status_t value);
 const char *smtc_modem_d2d_class_b_tx_done_status_to_str(const smtc_modem_d2d_class_b_tx_done_status_t value);
+
+#else
+
+#define smtc_modem_return_code_to_str(...) ""
+#define smtc_modem_adr_profile_to_str(...) ""
+#define smtc_modem_class_to_str(...) ""
+#define smtc_modem_file_upload_cipher_mode_to_str(...) ""
+#define smtc_modem_stream_cipher_mode_to_str(...) ""
+#define smtc_modem_dm_info_interval_format_to_str(...) ""
+#define smtc_modem_region_to_str(...) ""
+#define smtc_modem_mc_grp_id_to_str(...) ""
+#define smtc_modem_stack_state_to_str(...) ""
+#define smtc_modem_event_downdata_window_to_str(...) ""
+#define smtc_modem_time_sync_service_to_str(...) ""
+#define smtc_modem_event_time_status_to_str(...) ""
+#define smtc_modem_event_link_check_status_to_str(...) ""
+#define smtc_modem_event_txdone_status_to_str(...) ""
+#define smtc_modem_event_mute_status_to_str(...) ""
+#define smtc_modem_event_uploaddone_status_to_str(...) ""
+#define smtc_modem_event_setconf_tag_to_str(...) ""
+#define smtc_modem_event_almanac_update_status_to_str(...) ""
+#define smtc_modem_event_class_b_status_to_str(...) ""
+#define smtc_modem_event_class_b_ping_slot_status_to_str(...) ""
+#define smtc_modem_event_user_radio_access_status_to_str(...) ""
+#define smtc_modem_class_b_ping_slot_periodicity_to_str(...) ""
+#define smtc_modem_frame_pending_bit_status_to_str(...) ""
+#define smtc_modem_d2d_class_b_tx_done_status_to_str(...) ""
+
+#endif /* CONFIG_LORA_BASICS_MODEM_PRINTERS */
 
 #ifdef __cplusplus
 }

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 -   Bad implementation of smtc_modem_hal_*_radio_tcxo functions.
 -   The implementation of smtc_modem_hal_radio_irq_clear_pending based on our understanding of the porting guide.
+-   `smtc_app` using the printer functions when printers are disabled. Empty strings are now printed instead.
 
 ## [1.2.0] - 2023-06-21
 
