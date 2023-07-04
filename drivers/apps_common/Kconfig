@@ -1,6 +1,8 @@
 config LORA_BASICS_MODEM_PRINTERS
     bool "Enable printer helpers"
-    default y
+    default y if LOG
+    default y if PRINTK
+    default n
     depends on LOG || PRINTK
     help
         Enable this to get acecss to functions that take a lora basics
