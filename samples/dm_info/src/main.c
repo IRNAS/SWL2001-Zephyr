@@ -105,7 +105,7 @@ const uint8_t app_modem_dm_fields_single[] = {
 const uint8_t app_modem_dm_fields_user_data[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
 /* lr11xx radio context and its use in the ralf layer */
-const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr1120)));
+const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr11xx)));
 
 /* ---------------- Main ---------------- */
 

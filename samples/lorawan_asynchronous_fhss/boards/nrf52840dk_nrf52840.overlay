@@ -11,16 +11,23 @@
     pinctrl-names = "default", "sleep";
 
     cs-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-    lr1120: lr1120@0 {
+    lr11xx: lr11xx@0 {
         compatible = "irnas,lr11xx";
         reg = <0>;
         spi-max-frequency = <4000000>;
-        label = "LR1120";
 
         reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
         gps-lna-en-gpios = <&gpio0 29 0>;
         busy-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
         event-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN) >;
+
+		lf-tx-path = <LR11XX_TX_PATH_LF_LP_HP>;
+
+        tcxo-supply = <LR11XX_TCXO_SUPPLY_1_8V>;
+        tcxo-wakeup-time = <5>;
+
+        lf-clk = <LR11XX_LFCLK_RC>;
+        reg-mode = <LR11XX_REG_MODE_DCDC>;
 
         rf-sw-enable = <(LR11XX_DIO5 | LR11XX_DIO6 | LR11XX_DIO7)>;
         rf-sw-rx-mode = <LR11XX_DIO5>;
