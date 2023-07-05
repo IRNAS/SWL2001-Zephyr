@@ -54,7 +54,6 @@ static struct smtc_app_lorawan_cfg lorawan_cfg = {
 	.app_key = {0x15, 0x1B, 0x76, 0x0D, 0xED, 0x74, 0x87, 0xE7, 0x8A, 0xCA, 0xE8, 0xC8, 0x74,
 		    0x16, 0x31, 0x19},
 
-	// nwkskey: 62DDD832FFF6BE4E9FC5202B5450B6B8
 	.class = SMTC_MODEM_CLASS_A,
 	.region = SMTC_MODEM_REGION_EU_868,
 };
@@ -67,7 +66,7 @@ static struct smtc_app_event_callbacks event_callbacks = {
 };
 
 /* lr11xx radio context and its use in the ralf layer */
-const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr1120)));
+const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr11xx)));
 
 /* ---------------- Main ---------------- */
 K_SEM_DEFINE(main_sleep_sem, 0, 1);

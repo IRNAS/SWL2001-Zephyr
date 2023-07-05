@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Changed
+
+-   Update lr11xx driver to v1.5.1 and update all lr11xx DTS bindings accordingly.
+
 ### Fixed
 
 -   Bad implementation of smtc_modem_hal_*_radio_tcxo functions.
