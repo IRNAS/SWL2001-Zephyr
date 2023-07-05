@@ -77,7 +77,7 @@ static struct smtc_app_event_callbacks event_callbacks = {
 };
 
 /* lr11xx radio context and its use in the ralf layer */
-static const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr1120)));
+static const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr11xx)));
 
 /* Context data */
 static bool is_time_synced = false;

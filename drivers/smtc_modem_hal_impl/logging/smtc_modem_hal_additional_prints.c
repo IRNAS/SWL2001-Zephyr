@@ -19,6 +19,7 @@ LOG_MODULE_REGISTER(smtc_modem, CONFIG_LORA_BASICS_MODEM_LOG_LEVEL);
 
 #define PRINT_BUFFER_SIZE 255
 
+#ifdef CONFIG_LOG
 /**
  * @brief Check if string is "useless"
  *
@@ -82,6 +83,7 @@ static char *prv_string_trim(char *text)
 
 	return text;
 }
+#endif /* CONFIG_LOG */
 
 void smtc_modem_hal_print_trace(const char *fmt, ...)
 {

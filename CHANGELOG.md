@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-07-05
+
+### Changed
+
+-   Update lr11xx driver to v1.5.1 and update all lr11xx DTS bindings accordingly.
+
+### Fixed
+
+-   Bad implementation of smtc_modem_hal_\*\_radio_tcxo functions.
+-   The implementation of smtc_modem_hal_radio_irq_clear_pending based on our understanding of the porting guide.
+-   `smtc_app` using the printer functions when printers are disabled. Empty strings are now printed instead.
+
 ## [1.2.0] - 2023-06-21
 
 ### Added
@@ -59,7 +71,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.3.0...HEAD
+
+[1.3.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.2.0...v1.3.0
 
 [1.2.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.1.1...v1.2.0
 

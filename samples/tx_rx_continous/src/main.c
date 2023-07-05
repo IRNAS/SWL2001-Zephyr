@@ -103,7 +103,7 @@ LOG_MODULE_REGISTER(main);
 static struct smtc_app_event_callbacks event_callbacks = {0};
 
 /* lr11xx radio context and its use in the ralf layer */
-const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr1120)));
+const ralf_t modem_radio = RALF_LR11XX_INSTANTIATE(DEVICE_DT_GET(DT_NODELABEL(lr11xx)));
 
 /* ---------------- Main ---------------- */
 
