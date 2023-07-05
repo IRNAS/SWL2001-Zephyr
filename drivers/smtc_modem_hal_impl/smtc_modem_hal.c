@@ -2,6 +2,9 @@
  *
  * @brief Zephyr implementation of the HAL
  *
+ * This HAL was written using v5 of the porting guide, which can be found here:
+ * https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/3n000000vBOS/cId_tITnWws2wVARy7NIpzXUl2MK1G7At3y_XP3kAQo
+ *
  * @par
  * COPYRIGHT NOTICE: (c) 2022 Irnas. All rights reserved.
  */
@@ -50,6 +53,7 @@ K_WORK_DEFINE(prv_smtc_modem_hal_timer_work, prv_smtc_modem_hal_timer_work_handl
 /* context and callback for the event pin interrupt */
 static void *prv_smtc_modem_hal_radio_irq_context;
 static void (*prv_smtc_modem_hal_radio_irq_callback)(void *context);
+static bool prv_skip_next_radio_irq;
 
 /* Context for loading from persistant storage */
 static uint8_t *prv_load_into;
@@ -85,6 +89,8 @@ void smtc_modem_hal_init(const struct device *lr11xx, get_battery_level_cb_t get
 
 void smtc_modem_hal_reset_mcu(void)
 {
+	LOG_WRN("Resetting the MCU");
+	k_sleep(K_SECONDS(1)); /* Sleep a bit so logs are printed. */
 	sys_reboot(SYS_REBOOT_COLD);
 }
 
@@ -150,12 +156,12 @@ uint32_t smtc_modem_hal_get_time_in_100us(void)
 	return (current_ticks * 10000) / CONFIG_SYS_CLOCK_TICKS_PER_SEC;
 }
 
-/* Semtechs HAL for STM uses the same implemetation for mtc_modem_hal_get_time_in_100us
+/* Semtech's HAL for STM uses the same implementation for mtc_modem_hal_get_time_in_100us
  * and smtc_modem_hal_get_radio_irq_timestamp_in_100us.
  *
- * This does not make sense from just reading the doscstring in smtc_modem_hal.h,
- * where we would assume smtc_modem_hal_get_radio_irq_timestamp_in_100us
- * should return a time difference from some "event".
+ * This does not make sense from just reading the doscstring in smtc_modem_hal.h or the porting
+ * guide, where we would assume smtc_modem_hal_get_radio_irq_timestamp_in_100us should return a time
+ * difference from some "event".
  *
  * This should be checked with Semtech
  */
@@ -166,6 +172,11 @@ uint32_t smtc_modem_hal_get_radio_irq_timestamp_in_100us(void)
 
 /* ------------ Timer management ------------*/
 
+/**
+ * @brief Called when the prv_smtc_modem_hal_timer_work is submitted.
+ *
+ * Actually calls the callback that was requested by the smtc modem stack.
+ */
 static void prv_smtc_modem_hal_timer_work_handler(struct k_work *work)
 {
 	ARG_UNUSED(work);
@@ -173,14 +184,18 @@ static void prv_smtc_modem_hal_timer_work_handler(struct k_work *work)
 	prv_smtc_modem_hal_timer_callback(prv_smtc_modem_hal_timer_context);
 }
 
+/**
+ * @brief Called when the prv_smtc_modem_hal_timer expires.
+ *
+ * Submits the prv_smtc_modem_hal_timer_work to be handle the callback.
+ */
 static void prv_smtc_modem_hal_timer_handler(struct k_timer *timer)
 {
 	ARG_UNUSED(timer);
 
 	if (prv_modem_irq_enabled) {
-		/* Semtech is a bad boy :(
-		 * We have to execute this from a thread and not from irq.
-		 */
+		/* We have to execute this from a thread and not from irq since SPI transactions to
+		 * lr11xx may be performed. */
 		k_work_submit(&prv_smtc_modem_hal_timer_work);
 	}
 };
@@ -216,16 +231,20 @@ void smtc_modem_hal_enable_modem_irq(void)
 
 /* ------------ Context saving management ------------*/
 
+/**
+ * @brief Called when settings_load_subtree in prv_load is called.
+ *
+ * Reads the data from NVS into prv_load_into.
+ */
 static int prv_set(const char *name, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
 	/* We always load only 1 value via settings_load_subtree,
-	 * so there is no need to check the name
-	 */
+	 * so there is no need to check the name */
 
 	int err = read_cb(cb_arg, prv_load_into, prv_load_size);
 	if (err < 0) {
 		LOG_ERR("Unable to load %s", name);
-		/* TODO: We do no error checking here. This never seems to fail in the way we are
+		/* NOTE: We do no error checking here. This never seems to fail in the way we are
 		 * currently using the settings module. If this start to fail in some project,
 		 * consider adding some error handling. */
 	}
@@ -234,6 +253,10 @@ static int prv_set(const char *name, size_t len, settings_read_cb read_cb, void 
 	return 0;
 }
 
+/**
+ * @brief If not already done, initializes the settings subsystem and registers the smtc_modem_hal
+ * settings.
+ */
 void prv_settings_init(void)
 {
 	static bool is_init = false;
@@ -246,6 +269,13 @@ void prv_settings_init(void)
 	}
 }
 
+/**
+ * @brief Stores the data in buffer to settings.
+ *
+ * @param[in] path The settings path to store the data to.
+ * @param[in] buffer The data to store.
+ * @param[in] size The size of the data, in bytes.
+ */
 static void prv_store(char *path, const uint8_t *buffer, const uint32_t size)
 {
 	prv_settings_init();
@@ -253,6 +283,13 @@ static void prv_store(char *path, const uint8_t *buffer, const uint32_t size)
 	settings_save_one(path, buffer, size);
 }
 
+/**
+ * @brief Load the data into a buffer from settings.
+ *
+ * @param[in] path The settings path to read the data from.
+ * @param[in] buffer The buffer to read into.
+ * @param[in] size The number of bytes to read.
+ */
 static void prv_load(char *path, uint8_t *buffer, const uint32_t size)
 {
 
@@ -309,8 +346,7 @@ void smtc_modem_hal_assert_fail(uint8_t *func, uint32_t line)
 {
 
 	/* NOTE: uint8_t *func parameter is actually __func__ casted to uint8_t*,
-	 * so it can be safely printed with %s
-	 */
+	 * so it can be safely printed with %s */
 	smtc_modem_hal_store_crashlog((uint8_t *)func);
 	smtc_modem_hal_set_crashlog_status(true);
 	LOG_ERR("Assert triggered. Crash log: %s:%u", func, line);
@@ -331,7 +367,7 @@ uint32_t smtc_modem_hal_get_random_nb(void)
 
 uint32_t smtc_modem_hal_get_random_nb_in_range(const uint32_t val_1, const uint32_t val_2)
 {
-	/* Copy from Semtech since wether val_2 is included in the range or or not is unclear */
+	/* Implementation copied from the porting guide section 5.21 */
 	if (val_1 <= val_2) {
 		return (uint32_t)((smtc_modem_hal_get_random_nb() % (val_2 - val_1 + 1)) + val_1);
 	} else {
@@ -341,9 +377,8 @@ uint32_t smtc_modem_hal_get_random_nb_in_range(const uint32_t val_1, const uint3
 
 int32_t smtc_modem_hal_get_signed_random_nb_in_range(const int32_t val_1, const int32_t val_2)
 {
-	/* Copy from Semtech since wether val_2 is included in the range or or not is unclear */
-	uint32_t tmp_range = 0;
-
+	/* Implementation copied from the porting guide section 5.22 */
+	uint32_t tmp_range = 0; // ( val_1 <= val_2 ) ? ( val_2 - val_1 ) : ( val_1 - val_2 );
 	if (val_1 <= val_2) {
 		tmp_range = (val_2 - val_1);
 		return (int32_t)((val_1 + smtc_modem_hal_get_random_nb_in_range(0, tmp_range)));
@@ -355,9 +390,30 @@ int32_t smtc_modem_hal_get_signed_random_nb_in_range(const int32_t val_1, const 
 
 /* ------------ Radio env management ------------*/
 
-void lr11xx_event_cb(const struct device *dev)
+/**
+ * @brief Called when the lr11xx event pin interrupt is triggered.
+ *
+ * If CONFIG_LR11XX_EVENT_TRIGGER_GLOBAL_THREAD=y, this is called in the system workq.
+ * If CONFIG_LR11XX_EVENT_TRIGGER_OWN_THREAD=y, this is called in the lr11xx event thread.
+ *
+ * @param[in] dev The lr11xx device.
+ */
+void prv_lr11xx_event_cb(const struct device *dev)
 {
-	/* Due to the way the lr11xx driver is implemented, this is called from the global workq */
+	/* This logic is based on our understanding of section 5.24 of the porting guide.
+	 * NOTE:
+	 * In simple (init, join, uplink) tests smtc_modem_hal_radio_irq_clear_pending is
+	 * never called. This means that prv_skip_next_radio_irq is never true and no callbacks are
+	 * ever skipped.
+	 * This is why the LOG bellow is a warning. If it gets printed and you are encountering
+	 * issues, this might be the culprit. */
+	if (prv_skip_next_radio_irq) {
+		LOG_WRN("Skipping radio irq");
+		prv_skip_next_radio_irq = false;
+		return;
+	}
+
+	/* Due to the way the lr11xx driver is implemented, this is called from the system workq. */
 	prv_smtc_modem_hal_radio_irq_callback(prv_smtc_modem_hal_radio_irq_context);
 }
 
@@ -367,52 +423,35 @@ void smtc_modem_hal_irq_config_radio_irq(void (*callback)(void *context), void *
 	prv_smtc_modem_hal_radio_irq_context = context;
 	prv_smtc_modem_hal_radio_irq_callback = callback;
 
-	/* enable callback via lr11xx driver*/
-	lr11xx_board_attach_interrupt(prv_lr11xx_dev, lr11xx_event_cb);
+	/* enable callback via lr11xx driver */
+	lr11xx_board_attach_interrupt(prv_lr11xx_dev, prv_lr11xx_event_cb);
 	lr11xx_board_enable_interrupt(prv_lr11xx_dev);
 }
 
 void smtc_modem_hal_radio_irq_clear_pending(void)
 {
-	/* Nothing to do here, this is handled by Zephyr */
+	LOG_DBG("Clear pending radio irq");
+	prv_skip_next_radio_irq = true;
 }
 
-static void prv_tcxo_set(bool enable)
-{
-	const struct lr11xx_hal_context_cfg_t *config = prv_lr11xx_dev->config;
-	const struct lr11xx_hal_context_tcxo_cfg_t tcxo_cfg = config->tcxo_cfg;
-
-	/* if ther is no tcxo, exit early */
-	if (!tcxo_cfg.has_tcxo) {
-		return;
-	}
-
-	/* a timeout of 0 means "disable" */
-	uint32_t timeout_rtc_step = 0;
-	if (enable) {
-		timeout_rtc_step = lr11xx_radio_convert_time_in_ms_to_rtc_step(tcxo_cfg.timeout_ms);
-	}
-
-	int ret = lr11xx_system_set_tcxo_mode(prv_lr11xx_dev, tcxo_cfg.supply, timeout_rtc_step);
-	if (ret) {
-		LOG_ERR("Failed to configure TCXO.");
-	}
-}
-
-/* NOTE: since not all lora radios support tcxo, this must be handled in the modem HAL, and not in
- * the lr11xx hal */
 void smtc_modem_hal_start_radio_tcxo(void)
 {
-	prv_tcxo_set(true);
+	/* We only support TCXO's that are wired to the LR11XX. In such cases, this function must be
+	 * empty. See 5.25 of the porting guide. */
 }
 
 void smtc_modem_hal_stop_radio_tcxo(void)
 {
-	prv_tcxo_set(false);
+	/* We only support TCXO's that are wired to the LR11XX. In such cases, this function must be
+	 * empty. See 5.26 of the porting guide. */
 }
 
 uint32_t smtc_modem_hal_get_radio_tcxo_startup_delay_ms(void)
 {
+	/* From the porting guide:
+	 * If the TCXO is configured by the RAL BSP to start up automatically, then the value used
+	 * here should be the same as the startup delay used in the RAL BSP.
+	 */
 	const struct lr11xx_hal_context_cfg_t *config = prv_lr11xx_dev->config;
 	const struct lr11xx_hal_context_tcxo_cfg_t tcxo_cfg = config->tcxo_cfg;
 
@@ -461,7 +500,6 @@ int8_t smtc_modem_hal_get_temperature(void)
 /* This is called when DM info required is */
 uint8_t smtc_modem_hal_get_voltage(void)
 {
-
 	uint32_t voltage;
 	int ret = prv_get_voltage_cb(&voltage);
 
@@ -469,7 +507,7 @@ uint8_t smtc_modem_hal_get_voltage(void)
 		return 0;
 	}
 
-	/* Step used in Semtechs hal is 1/50V == 20 mV */
+	/* Step used in Semtech's hal is 1/50V == 20 mV */
 	uint32_t converted = voltage / 20;
 
 	if (converted > 255) {
@@ -487,3 +525,7 @@ int8_t smtc_modem_hal_get_board_delay_ms(void)
 	 * but just to be safe: */
 	return 1;
 }
+
+/*
+ * NOTE: smtc_modem_hal_print_trace() is implemented in ./logging/smtc_modem_hal_additional_prints.c
+ */
