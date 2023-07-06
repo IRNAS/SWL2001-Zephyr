@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Added
+
+-   Option to disable default context storage implementation in the HAL and provide one's own implementation.
+-   `custom_context_storage` sample to demonstrate the use of custom context storage implementation.
+
 ## [1.3.0] - 2023-07-05
 
 ### Changed
