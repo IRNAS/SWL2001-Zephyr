@@ -28,12 +28,10 @@ LOG_MODULE_REGISTER(smtc_modem_hal);
 /* ------------ Local context ------------*/
 
 /* lr11xx device pointer */
-const struct device *prv_lr11xx_dev;
+static const struct device *prv_lr11xx_dev;
 
-/* environment getters */
-static get_battery_level_cb_t prv_get_battery_level_cb;
-static get_temperature_cb_t prv_get_temperature_cb;
-static get_voltage_cb_t prv_get_voltage_cb;
+/* External callbacks */
+static struct smtc_modem_hal_cb *prv_hal_cb;
 
 /* context and callback for modem_hal_timer */
 static void *prv_smtc_modem_hal_timer_context;
@@ -55,34 +53,27 @@ static void *prv_smtc_modem_hal_radio_irq_context;
 static void (*prv_smtc_modem_hal_radio_irq_callback)(void *context);
 static bool prv_skip_next_radio_irq;
 
-/* Context for loading from persistant storage */
-static uint8_t *prv_load_into;
-static uint32_t prv_load_size;
-
-static int prv_set(const char *name, size_t len, settings_read_cb read_cb, void *cb_arg);
-static struct settings_handler prv_sh = {
-	.name = "smtc_modem_hal",
-	.h_set = prv_set,
-};
-
 /* ------------ Initialization ------------
  *
  * This function is defined in smtc_modem_hal_init.h
  * and is used to set everything up in here.
  */
 
-void smtc_modem_hal_init(const struct device *lr11xx, get_battery_level_cb_t get_battery,
-			 get_temperature_cb_t get_temperature, get_voltage_cb_t get_voltage)
+void smtc_modem_hal_init(const struct device *lr11xx, struct smtc_modem_hal_cb *hal_cb)
 {
 	__ASSERT(lr11xx, "lr11xx must be provided");
-	__ASSERT(get_battery, "get_battery must be provided");
-	__ASSERT(get_temperature, "get_temperature must be provided");
-	__ASSERT(get_voltage, "get_voltage must be provided");
+	__ASSERT_NO_MSG(hal_cb);
+	__ASSERT_NO_MSG(hal_cb->get_battery_level);
+	__ASSERT_NO_MSG(hal_cb->get_temperature);
+	__ASSERT_NO_MSG(hal_cb->get_voltage);
+
+#ifdef CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL
+	__ASSERT_NO_MSG(hal_cb->context_store);
+	__ASSERT_NO_MSG(hal_cb->context_restore);
+#endif /* CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL */
 
 	prv_lr11xx_dev = lr11xx;
-	prv_get_battery_level_cb = get_battery;
-	prv_get_temperature_cb = get_temperature;
-	prv_get_voltage_cb = get_voltage;
+	prv_hal_cb = hal_cb;
 }
 
 /* ------------ Reset management ------------*/
@@ -231,6 +222,57 @@ void smtc_modem_hal_enable_modem_irq(void)
 
 /* ------------ Context saving management ------------*/
 
+#ifdef CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL
+
+void smtc_modem_hal_context_restore(const modem_context_type_t ctx_type, uint8_t *buffer,
+				    const uint32_t size)
+{
+	prv_hal_cb->context_restore(ctx_type, buffer, size);
+}
+
+void smtc_modem_hal_context_store(const modem_context_type_t ctx_type, const uint8_t *buffer,
+				  const uint32_t size)
+{
+	prv_hal_cb->context_store(ctx_type, buffer, size);
+}
+
+void smtc_modem_hal_store_crashlog(uint8_t crashlog[CRASH_LOG_SIZE])
+{
+	/* We use MODEM_CONTEXT_TYPE_SIZE as the ID so we do not overwrite any of the contexts */
+	prv_hal_cb->context_store(MODEM_CONTEXT_TYPE_SIZE, crashlog, CRASH_LOG_SIZE);
+}
+
+void smtc_modem_hal_restore_crashlog(uint8_t crashlog[CRASH_LOG_SIZE])
+{
+	prv_hal_cb->context_restore(MODEM_CONTEXT_TYPE_SIZE, crashlog, CRASH_LOG_SIZE);
+}
+
+void smtc_modem_hal_set_crashlog_status(bool available)
+{
+	prv_hal_cb->context_store(MODEM_CONTEXT_TYPE_SIZE + 1, (uint8_t *)&available,
+				  sizeof(available));
+}
+
+bool smtc_modem_hal_get_crashlog_status(void)
+{
+	bool available;
+	prv_hal_cb->context_restore(MODEM_CONTEXT_TYPE_SIZE + 1, (uint8_t *)&available,
+				    sizeof(available));
+	return available;
+}
+
+#else
+
+/* Context for loading from persistant storage */
+static uint8_t *prv_load_into;
+static uint32_t prv_load_size;
+
+static int prv_set(const char *name, size_t len, settings_read_cb read_cb, void *cb_arg);
+static struct settings_handler prv_sh = {
+	.name = "smtc_modem_hal",
+	.h_set = prv_set,
+};
+
 /**
  * @brief Called when settings_load_subtree in prv_load is called.
  *
@@ -292,7 +334,6 @@ static void prv_store(char *path, const uint8_t *buffer, const uint32_t size)
  */
 static void prv_load(char *path, uint8_t *buffer, const uint32_t size)
 {
-
 	prv_settings_init();
 
 	prv_load_into = buffer;
@@ -303,7 +344,6 @@ static void prv_load(char *path, uint8_t *buffer, const uint32_t size)
 void smtc_modem_hal_context_restore(const modem_context_type_t ctx_type, uint8_t *buffer,
 				    const uint32_t size)
 {
-
 	char path[30];
 	snprintk(path, sizeof(path), "smtc_modem_hal/context/%d", ctx_type);
 	prv_load(path, buffer, size);
@@ -312,7 +352,6 @@ void smtc_modem_hal_context_restore(const modem_context_type_t ctx_type, uint8_t
 void smtc_modem_hal_context_store(const modem_context_type_t ctx_type, const uint8_t *buffer,
 				  const uint32_t size)
 {
-
 	char path[30];
 	snprintk(path, sizeof(path), "smtc_modem_hal/context/%d", ctx_type);
 	prv_store(path, buffer, size);
@@ -339,6 +378,8 @@ bool smtc_modem_hal_get_crashlog_status(void)
 	prv_load("smtc_modem_hal/crashlog_status", (uint8_t *)&available, sizeof(available));
 	return available;
 }
+
+#endif /* CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL */
 
 /* ------------ assert management ------------*/
 
@@ -464,7 +505,7 @@ uint32_t smtc_modem_hal_get_radio_tcxo_startup_delay_ms(void)
 uint8_t smtc_modem_hal_get_battery_level(void)
 {
 	uint32_t battery;
-	int ret = prv_get_battery_level_cb(&battery);
+	int ret = prv_hal_cb->get_battery_level(&battery);
 
 	if (ret) {
 		return 0;
@@ -482,7 +523,7 @@ uint8_t smtc_modem_hal_get_battery_level(void)
 int8_t smtc_modem_hal_get_temperature(void)
 {
 	int32_t temperature;
-	int ret = prv_get_temperature_cb(&temperature);
+	int ret = prv_hal_cb->get_temperature(&temperature);
 
 	if (ret) {
 		return -128;
@@ -501,7 +542,7 @@ int8_t smtc_modem_hal_get_temperature(void)
 uint8_t smtc_modem_hal_get_voltage(void)
 {
 	uint32_t voltage;
-	int ret = prv_get_voltage_cb(&voltage);
+	int ret = prv_hal_cb->get_voltage(&voltage);
 
 	if (ret) {
 		return 0;

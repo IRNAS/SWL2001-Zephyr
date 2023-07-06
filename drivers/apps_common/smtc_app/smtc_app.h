@@ -229,6 +229,8 @@ struct smtc_app_event_callbacks {
  * only if that DM info field is configrued to be sent.
  *
  * if the app does not provide the callbacks, a default (minimum) will be sent by the DM subsystem.
+ *
+ * If CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL=y, two additional callbacks MUST be implemented.
  */
 struct smtc_app_env_callbacks {
 	/**
@@ -264,6 +266,33 @@ struct smtc_app_env_callbacks {
 	 * level is available
 	 */
 	int (*get_voltage_level)(uint32_t *voltage_level);
+
+#ifdef CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL
+
+	/**
+	 * @brief Persistently store context from the lora basics modem
+	 *
+	 * The application should use some persistent storage to store the context.
+	 *
+	 * @param[in] ctx_id The ID of the context to store. Each ID must be stored separately.
+	 * @param[in] buffer The buffer to store.
+	 * @param[in] size The size of the buffer to store, in bytes.
+	 */
+	void (*context_store)(const uint8_t ctx_id, const uint8_t *buffer, const uint32_t size);
+
+	/**
+	 * @brief Restore context to the lora basics modem
+	 *
+	 * The application should load the context from the persistent storage used in
+	 * context_store.
+	 *
+	 * @param[in] ctx_id The ID of the context to restore.
+	 * @param[in] buffer The buffer to read into.
+	 * @param[in] size The size of the buffer, in bytes.
+	 */
+	void (*context_restore)(const uint8_t ctx_id, uint8_t *buffer, const uint32_t size);
+
+#endif /* CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL */
 };
 
 /**
@@ -278,7 +307,8 @@ struct smtc_app_env_callbacks {
  * be set to NULL.
  * @param[in] env_callbacks Desired environment callbacks. Can be NULL. All callbacks that are not
  * required by the application can be set to NULL.
- * @return SMTC_MODEM_RC_OK if successfully, or other error code if unsuccessful
+ *
+ * @return SMTC_MODEM_RC_OK if successful, or other error code if unsuccessful
  */
 void smtc_app_init(const ralf_t *radio, struct smtc_app_event_callbacks *callbacks,
 		   struct smtc_app_env_callbacks *env_callbacks);
@@ -293,7 +323,8 @@ void smtc_app_init(const ralf_t *radio, struct smtc_app_event_callbacks *callbac
  * @param[in] stack_id The stack ID to configure.
  * @param[in] cfg The configuration to apply. The config struct must live for as long as the modem
  * engine is in use.
- * @return SMTC_MODEM_RC_OK if successfully, or other error code if unsuccessful
+ *
+ * @return SMTC_MODEM_RC_OK if successful, or other error code if unsuccessful
  */
 smtc_modem_return_code_t smtc_app_configure_lorawan_params(uint8_t stack_id,
 							   struct smtc_app_lorawan_cfg *cfg);
@@ -311,6 +342,7 @@ void smtc_app_display_versions(void);
  * @brief Get time in gps epoch
  *
  * @param[out] gps_time The current gps time (number of seconds since the GPS epoch)
+ *
  * @return smtc_modem_return_code_t SMTC_MODEM_RC_OK if time was read successfully, or other error
  * code if unsuccessful
  */
@@ -320,6 +352,7 @@ smtc_modem_return_code_t smtc_app_get_gps_time(uint32_t *gps_time);
  * @brief Get utc time
  *
  * @param[out] gps_time The current unix time (number of seconds since the unix epoch)
+ *
  * @return SMTC_MODEM_RC_OK if time was read successfully, or other error
  * code if unsuccessful
  */
