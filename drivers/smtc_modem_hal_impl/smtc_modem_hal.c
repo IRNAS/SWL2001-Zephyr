@@ -469,6 +469,13 @@ void smtc_modem_hal_irq_config_radio_irq(void (*callback)(void *context), void *
 	lr11xx_board_enable_interrupt(prv_lr11xx_dev);
 }
 
+void smtc_modem_hal_irq_reset_radio_irq(void)
+{
+	lr11xx_board_disable_interrupt(prv_lr11xx_dev);
+	lr11xx_board_attach_interrupt(prv_lr11xx_dev, prv_lr11xx_event_cb);
+	lr11xx_board_enable_interrupt(prv_lr11xx_dev);
+}
+
 void smtc_modem_hal_radio_irq_clear_pending(void)
 {
 	LOG_DBG("Clear pending radio irq");

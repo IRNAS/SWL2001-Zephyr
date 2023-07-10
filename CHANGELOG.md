@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 -   Option to disable default context storage implementation in the HAL and provide one's own implementation.
 -   `custom_context_storage` sample to demonstrate the use of custom context storage implementation.
+-   Function to re-attach radio irq callbacks if changed by the user during direct radio access. 
 
 ## [1.3.0] - 2023-07-05
 

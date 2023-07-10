@@ -89,6 +89,18 @@ struct smtc_modem_hal_cb {
  */
 void smtc_modem_hal_init(const struct device *lr11xx, struct smtc_modem_hal_cb *hal_cb);
 
+/**
+ * @brief Re-initialization of the hal radio irq radio callbacks.
+ *
+ * This function must be called if after calling smtc_modem_suspend_before_user_radio_access()
+ * function to directly access radio, user registers alternative radio irq functions with
+ * lr11xx_board_attach_interrupt(). To resume usage of defout irq callbacks: prv_lr11xx_event_cb(),
+ * this function must be called, before resuming usage of smtc modem by calling
+ * smtc_modem_resume_after_user_radio_access(), otherwise event handling will not work.
+ *
+ */
+void smtc_modem_hal_irq_reset_radio_irq(void);
+
 #ifdef __cplusplus
 }
 #endif
