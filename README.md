@@ -14,7 +14,7 @@ LoRa Basics Modem port for Zephyr.
 2. Then in the `projects` section add at the bottom:
 
     ```yaml
-    - name: SWL001-Zephyr
+    - name: SWL2001-Zephyr
       repo-path: SWL2001-Zephyr
       path: irnas/SWL2001-Zephyr
       remote: irnas
