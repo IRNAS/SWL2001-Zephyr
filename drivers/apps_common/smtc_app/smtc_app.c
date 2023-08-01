@@ -63,10 +63,13 @@ LOG_MODULE_REGISTER(smtc_app, CONFIG_SMTC_APP_LOG_LEVEL);
 /* Number of leap seconds as of September 15th 2021 */
 #define OFFSET_LEAP_SECONDS 18
 
-void prv_event_process(void);
-struct smtc_app_event_callbacks *prv_callbacks;
-struct smtc_app_env_callbacks *prv_env_callbacks;
-struct smtc_app_lorawan_cfg *prv_cfg;
+static void prv_event_process(void);
+static struct smtc_app_event_callbacks *prv_callbacks;
+static struct smtc_app_env_callbacks *prv_env_callbacks;
+static struct smtc_app_lorawan_cfg *prv_cfg;
+
+/* Callbacks for HAL implementation */
+static struct smtc_modem_hal_cb prv_hal_cb;
 
 /* macro to ease repeated error checking in apps_modem_common_init */
 #define SMTC_ERR_CHECK(func_name, rc)                                                              \
@@ -131,12 +134,27 @@ void smtc_app_init(const ralf_t *radio, struct smtc_app_event_callbacks *callbac
 	__ASSERT(radio, "radio must be provided");
 	__ASSERT(callbacks, "callbacks must be provided");
 	/* env_callbacks can be NULL */
+#ifdef CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL
+	__ASSERT(env_callbacks->context_store, "context_store must be provided");
+	__ASSERT(env_callbacks->context_restore, "context_restore must be provided");
 
+#endif
 	prv_callbacks = callbacks;
 	prv_env_callbacks = env_callbacks;
 
-	smtc_modem_hal_init((const struct device *)radio->ral.context, prv_get_battery_level_cb,
-			    prv_get_temperature_cb, prv_get_voltage_cb);
+	/* Create callback structure for HAL impl */
+	prv_hal_cb = (struct smtc_modem_hal_cb){
+		.get_battery_level = prv_get_battery_level_cb,
+		.get_temperature = prv_get_temperature_cb,
+		.get_voltage = prv_get_voltage_cb,
+
+#ifdef CONFIG_LORA_BASICS_MODEM_USER_STORAGE_IMPL
+		.context_store = env_callbacks->context_store,
+		.context_restore = env_callbacks->context_restore,
+#endif
+	};
+
+	smtc_modem_hal_init((const struct device *)radio->ral.context, &prv_hal_cb);
 
 	smtc_modem_init(radio, &prv_event_process);
 }
@@ -223,7 +241,7 @@ smtc_modem_return_code_t smtc_app_get_utc_time(uint32_t *utc_time)
 
 /* PRIVATE EVENT PROCESSOR - this calls registered callbacks from app layer */
 
-void prv_event_process(void)
+static void prv_event_process(void)
 {
 	smtc_modem_event_t current_event;
 	smtc_modem_return_code_t return_code = SMTC_MODEM_RC_OK;

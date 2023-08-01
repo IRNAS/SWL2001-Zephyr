@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.4.0] - 2023-08-01
+
+### Added
+
+-   Option to disable default context storage implementation in the HAL and provide one's own implementation.
+-   `custom_context_storage` sample to demonstrate the use of custom context storage implementation.
+-   Function to re-attach radio irq callbacks if changed by the user during direct radio access. 
+
 ## [1.3.0] - 2023-07-05
 
 ### Changed
@@ -71,7 +79,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.4.0...HEAD
+
+[1.4.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.3.0...v1.4.0
 
 [1.3.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.2.0...v1.3.0
 

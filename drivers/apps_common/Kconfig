@@ -3,7 +3,6 @@ config LORA_BASICS_MODEM_PRINTERS
     default y if LOG
     default y if PRINTK
     default n
-    depends on LOG || PRINTK
     help
         Enable this to get acecss to functions that take a lora basics
         modem enum and return a static string, so it may be printed/logged
