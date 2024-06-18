@@ -13,10 +13,15 @@
 #include <smtc_modem_hal_init.h>
 
 #include <zephyr/kernel.h>
-#include <zephyr/random/rand32.h>
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/__assert.h>
 #include <zephyr/sys/reboot.h>
+
+#if KERNEL_VERSION_NUMBER >= ZEPHYR_VERSION(3, 4, 99)
+#include <zephyr/random/random.h>
+#else
+#include <zephyr/random/rand32.h>
+#endif
 
 #include <lr11xx_board.h>
 #include <lr11xx_radio.h>
