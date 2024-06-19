@@ -16,6 +16,7 @@
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/__assert.h>
 #include <zephyr/sys/reboot.h>
+#include <version.h>
 
 #if KERNEL_VERSION_NUMBER >= ZEPHYR_VERSION(3, 4, 99)
 #include <zephyr/random/random.h>
