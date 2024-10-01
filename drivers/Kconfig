@@ -97,6 +97,15 @@ config LORA_BASICS_MODEM_REGION_WW_2G4
     bool "Enable WW_2G4 region"
     default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
 
+config LORA_BASICS_MODEM_REGION_S_BAND_2G
+    bool "Enable S_BAND_2G region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_S_BAND_2G_SINGLE_DR
+    bool "Enable single datarate for S_BAND_2G region"
+    depends on LORA_BASICS_MODEM_REGION_S_BAND_2G
+    default n
+
 config LORA_BASICS_MODEM_D2D
     bool "Enable class B device to device protocol support"
     default n
