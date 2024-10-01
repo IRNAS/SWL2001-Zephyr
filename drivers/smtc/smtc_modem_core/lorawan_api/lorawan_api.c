@@ -128,6 +128,8 @@ void lorawan_api_init( radio_planner_t* rp )
     smtc_real_region_types = SMTC_REAL_REGION_RU_864;
 #elif defined( REGION_WW2G4 )
     smtc_real_region_types = SMTC_REAL_REGION_WW2G4;
+#elif defined( REGION_S_BAND_2G )
+    smtc_real_region_types = SMTC_REAL_REGION_S_BAND_2G;
 #else
 #error "Please select supported region"
 #endif

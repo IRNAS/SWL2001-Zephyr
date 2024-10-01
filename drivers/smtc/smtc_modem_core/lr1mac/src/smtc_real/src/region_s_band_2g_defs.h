@@ -65,8 +65,8 @@ extern "C" {
 #define ADR_ACK_LIMIT_S_BAND_2G                (64)
 #define ADR_ACK_DELAY_S_BAND_2G                (32)
 #define ACK_TIMEOUT_S_BAND_2G                  (2)             // +/- 1 s (random delay between 1 and 3 seconds)
-#define FREQMIN_S_BAND_2G                      (2008450000)    // Hz //LUKATODO: 1980000000  
-#define FREQMAX_S_BAND_2G                      (2008450000)    // Hz //LUKATODO: 2100000000
+#define FREQMIN_S_BAND_2G                      (2008450000)    // Hz
+#define FREQMAX_S_BAND_2G                      (2008450000)    // Hz 
 #define RX2_FREQ_S_BAND_2G                     (2008450000)    // Hz
 #define FREQUENCY_FACTOR_S_BAND_2G             (200)           // MHz/200 when coded over 24 bits
 #define RX2DR_INIT_S_BAND_2G                   (0)
@@ -129,7 +129,6 @@ typedef struct region_s_band_2g_context_s
 #if defined( PERF_TEST_ENABLED )
 static const uint32_t default_freq_s_band_2g[] = { 2479000000, 2479000000, 2479000000 };
 #else
-// static const uint32_t default_freq_s_band_2g[] = { 2403000000, 2425000000, 2479000000 }; //LUKA-REMOVE:
 static const uint32_t default_freq_s_band_2g[] = { 2008450000, 2008450000, 2008450000 };
 #endif
 
