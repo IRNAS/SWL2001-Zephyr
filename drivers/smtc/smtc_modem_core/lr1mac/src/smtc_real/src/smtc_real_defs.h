@@ -77,6 +77,9 @@ extern "C" {
 #if defined( REGION_CN_470_RP_1_0 )
 #include "region_cn_470_rp_1_0_defs.h"
 #endif
+#if defined ( REGION_S_BAND_2G )
+#include "region_s_band_2g_defs.h"
+#endif
 
 /*
  * -----------------------------------------------------------------------------
@@ -148,6 +151,9 @@ typedef enum smtc_real_region_types_e
     SMTC_REAL_REGION_AS_923_GRP4 = 13,
 #endif
 #endif
+#if defined( REGION_S_BAND_2G )
+    SMTC_REAL_REGION_S_BAND_2G = 14,
+#endif
 } smtc_real_region_types_t;
 
 /**
@@ -207,6 +213,9 @@ static const uint8_t smtc_real_region_list[] = {
 #if defined( REGION_AS_923 )
     SMTC_REAL_REGION_AS_923_GRP4,
 #endif
+#endif
+#if defined( REGION_S_BAND_2G )
+    SMTC_REAL_REGION_S_BAND_2G,
 #endif
 };
 
@@ -377,6 +386,10 @@ typedef struct smtc_real_s
 #if defined( REGION_CN_470_RP_1_0 )
         region_cn470_rp_1_0_context_t cn470_rp_1_0;
 #endif
+#if defined ( REGION_S_BAND_2G )
+        region_s_band_2g_context_t s_band_2g;
+#endif
+
     } region;
 
 } smtc_real_t;

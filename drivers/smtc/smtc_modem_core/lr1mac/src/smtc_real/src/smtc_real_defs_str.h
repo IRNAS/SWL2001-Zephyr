@@ -100,6 +100,9 @@ static const char* smtc_real_region_list_str[] = {
     [SMTC_REAL_REGION_AS_923_GRP4] = "AS923_GRP4",
 #endif
 #endif
+#if defined ( REGION_S_BAND_2G )
+    [SMTC_REAL_REGION_S_BAND_2G] = "S_BAND_2G",
+#endif
 };
 
 #endif
