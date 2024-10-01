@@ -59,6 +59,9 @@ zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_US_915 
 zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_WW_2G4 REGION_WW2G4)  # the underscore missing here is intentional!
 zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_WW_2G4 WW2G4_SINGLE_DATARATE)
 
+zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_S_BAND_2G REGION_S_BAND_2G)
+zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_S_BAND_2G_SINGLE_DR S_BAND_2G_SINGLE_DATARATE)
+
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_AS_923 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_as_923.c)
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_AU_915 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_au_915.c)
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_CN_470 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_cn_470.c)
@@ -69,6 +72,7 @@ zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_KR_920 smtc/smtc_mo
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_RU_864 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_ru_864.c)
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_US_915 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_us_915.c)
 zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_WW_2G4 smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_ww2g4.c)
+zephyr_library_sources_ifdef(CONFIG_LORA_BASICS_MODEM_REGION_S_BAND_2G smtc/smtc_modem_core/lr1mac/src/smtc_real/src/region_s_band_2g.c)
 
 #  ----- common.mk -----
 
