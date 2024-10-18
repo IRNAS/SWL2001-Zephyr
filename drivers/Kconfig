@@ -117,6 +117,10 @@ config LORA_BASICS_MODEM_TIME_SYNC
     bool "Enable time sync support"
     default n
 
+config LORA_BASICS_MODEM_DUTY_CYCLE
+    bool "Enable duty cycle support"
+    default y
+
 module = LORA_BASICS_MODEM
 module-str = LORA_BASICS_MODEM
 source "subsys/logging/Kconfig.template.log_config"
