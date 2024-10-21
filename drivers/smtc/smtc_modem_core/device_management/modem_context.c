@@ -394,7 +394,11 @@ void modem_context_init( )
     user_define_charge_counter  = 0;
     charge_counter_to_send      = CHARGE_COUNTER_MODEM;
     modem_rf_output             = MODEM_RFO_LP_LF;
+#ifdef CONFIG_LORA_BASICS_MODEM_DUTY_CYCLE
     duty_cycle_disabled_by_host = false;
+#else
+    duty_cycle_disabled_by_host = true;
+#endif  /* CONFIG_LORA_BASICS_MODEM_DUTY_CYCLE */
     crc_fw                      = compute_crc_fw( );
     modem_adr_profile           = SMTC_MODEM_ADR_PROFILE_NETWORK_CONTROLLED;
 #if defined( ADD_SMTC_FILE_UPLOAD )
