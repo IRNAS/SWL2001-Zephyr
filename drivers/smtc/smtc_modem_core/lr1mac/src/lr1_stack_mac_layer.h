@@ -49,16 +49,63 @@ extern "C" {
 #define MIN_RX_WINDOW_SYMB 6         // open rx window at least 6 symbols
 #define MAX_RX_WINDOW_SYMB 255       // open rx window at max 225 symbol hardware limitation
 #define MIN_RX_WINDOW_DURATION_MS 6  // open rx window at least 6ms
+
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+#define LR1MAC_SESSION_CONTEXT_VERSION 1U
+#define LR1MAC_COUNTER_CONTEXT_MAGIC   0x46434E54U
+#endif
+
 /*
  *-----------------------------------------------------------------------------------
  * --- PUBLIC TYPES -----------------------------------------------------------------
  */
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+typedef struct lr1mac_session_context_s
+{
+    uint8_t  version;
+    uint8_t  join_nonce[6];
+
+    uint32_t dev_addr;
+    uint8_t  tx_data_rate_adr;
+    int8_t   tx_power;
+    uint8_t  nb_trans;
+    uint8_t  rx2_data_rate;
+    uint32_t rx2_frequency;
+    uint8_t  rx1_dr_offset;
+    uint8_t  rx1_delay_s;
+    uint8_t  max_erp_dbm;
+    uint8_t  uplink_dwell_time;
+    uint8_t  downlink_dwell_time;
+    uint32_t max_duty_cycle_index;
+
+    int32_t  adr_ack_cnt;
+    uint8_t  adr_ack_limit_init;
+    uint8_t  adr_ack_delay_init;
+    uint8_t  adr_ack_limit;
+    uint8_t  adr_ack_delay;
+
+    union smtc_real_region_u region;
+
+    uint32_t crc;  // crc MUST be the last field
+} lr1mac_session_context_t;
+
+typedef struct lr1mac_nvm_context_s
+{
+    mac_context_t            mac;
+    lr1mac_session_context_t session;
+} lr1mac_nvm_context_t;
+#endif
+
 typedef struct lr1_stack_mac_s
 {
     mac_context_t mac_context;
-    smtc_real_t*  real;  // Region Abstraction Layer
-    smtc_dtc_t*   dtc_obj;
-    smtc_lbt_t*   lbt_obj;
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    lr1mac_session_context_t session_context;
+    bool                     session_counter_context_valid;
+#endif
+    smtc_real_t* real;  // Region Abstraction Layer
+    smtc_dtc_t*  dtc_obj;
+    smtc_lbt_t*  lbt_obj;
 
     void ( *push_callback )( void* );
     void* push_context;

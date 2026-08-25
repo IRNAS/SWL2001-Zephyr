@@ -19,6 +19,12 @@ config LORA_BASICS_MODEM_USER_STORAGE_IMPL
 
 if LORA_BASICS_MODEM
 
+config LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION
+    bool "Persist the LoRaWAN join session"
+    default n
+    help
+      Preserve a valid LoRaWAN join session and frame counters across device reboots.
+
 config LORA_BASICS_MODEM_USE_GNSS
     bool "Enable gnss almanac update features"
     default n
