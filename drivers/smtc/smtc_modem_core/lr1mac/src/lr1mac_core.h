@@ -155,6 +155,15 @@ status_lorawan_t lr1mac_core_context_load( lr1_stack_mac_t* lr1_mac_obj );
  */
 void lr1mac_core_context_save( lr1_stack_mac_t* lr1_mac_obj );
 
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+/**
+ * @brief Persist the joined LoRaWAN session and its frame counters
+ *
+ * @param lr1_mac_obj
+ */
+void lr1mac_core_persist_session( lr1_stack_mac_t* lr1_mac_obj );
+#endif
+
 /**
  * @brief Get the snr of the last user receive packet
  *

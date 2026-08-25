@@ -6,6 +6,8 @@ zephyr_library()
 
 zephyr_library_compile_definitions(LR11XX)
 zephyr_library_compile_definitions(LR11XX_TRANSCEIVER)
+zephyr_library_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION
+    LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION)
 
 # sources
 zephyr_library_sources(

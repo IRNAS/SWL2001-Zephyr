@@ -87,9 +87,17 @@ static uint32_t    failsafe_timstamp_get( lr1_stack_mac_t* lr1_mac_obj );
 static rp_status_t rp_status_get( lr1_stack_mac_t* lr1_mac_obj );
 static void        copy_user_payload( lr1_stack_mac_t* lr1_mac_obj, const uint8_t* data_in, const uint8_t size_in );
 static void        lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj );
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+static void        save_counter_context( const lr1_stack_mac_t* lr1_mac_obj, bool reserve_next_uplink );
+#endif
 static void        save_devnonce_rst( const lr1_stack_mac_t* lr1_mac_obj );
 static void        load_devnonce_reset( lr1_stack_mac_t* lr1_mac_obj );
 static void        try_recover_nvm( lr1_stack_mac_t* lr1_mac_obj );
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+static void        restore_session_context( lr1_stack_mac_t* lr1_mac_obj );
+static void        build_session_context( const lr1_stack_mac_t* lr1_mac_obj,
+                                          lr1mac_session_context_t* session_context );
+#endif
 /*
  *-----------------------------------------------------------------------------------
  *--- PUBLIC FUNCTIONS DEFINITIONS --------------------------------------------------
@@ -173,6 +181,10 @@ void lr1mac_core_init( lr1_stack_mac_t* lr1_mac_obj, smtc_real_t* real, smtc_lbt
     // real is initialized and not reinit after the join accept
     lr1_mac_obj->adr_ack_limit_init = smtc_real_get_adr_ack_limit( lr1_mac_obj );
     lr1_mac_obj->adr_ack_delay_init = smtc_real_get_adr_ack_delay( lr1_mac_obj );
+
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    restore_session_context( lr1_mac_obj );
+#endif
 }
 
 /***********************************************************************************************/
@@ -226,6 +238,18 @@ lr1mac_states_t lr1mac_core_process( lr1_stack_mac_t* lr1_mac_obj )
         case RADIOSTATE_IDLE:
             lr1_mac_obj->radio_process_state = RADIOSTATE_PENDING;
             DBG_PRINT_WITH_LINE( "Send Payload  HOOK ID = %d", myhook_id );
+
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+            /* DevNonce and FCntUp must be committed before the frame can reach the radio. */
+            if( lr1_mac_obj->join_status == JOINING )
+            {
+                save_devnonce_rst( lr1_mac_obj );
+            }
+            else if( lr1_mac_obj->join_status == JOINED )
+            {
+                save_counter_context( lr1_mac_obj, true );
+            }
+#endif
 
 #if MODEM_HAL_DBG_TRACE == MODEM_HAL_FEATURE_ON
             modulation_type_t tx_modulation_type =
@@ -282,11 +306,13 @@ lr1mac_states_t lr1mac_core_process( lr1_stack_mac_t* lr1_mac_obj )
                 ( lr1_mac_obj->rp->stats.tx_last_toa_ms[myhook_id] << lr1_mac_obj->max_duty_cycle_index ) -
                 lr1_mac_obj->rp->stats.tx_last_toa_ms[myhook_id];
 
+#if !defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
             if( lr1_mac_obj->join_status == JOINING )
             {
                 // save devnonce after the end of TX
                 save_devnonce_rst( lr1_mac_obj );
             }
+#endif
             lr1_stack_mac_rx_timer_configure( lr1_mac_obj, RX1 );
             lr1_stack_mac_update_tx_done( lr1_mac_obj );
             smtc_duty_cycle_sum( lr1_mac_obj->dtc_obj, lr1_mac_obj->tx_frequency,
@@ -448,9 +474,17 @@ join_status_t lr1_mac_joined_status_get( lr1_stack_mac_t* lr1_mac_obj )
 void lr1mac_core_join_status_clear( lr1_stack_mac_t* lr1_mac_obj )
 {
     lr1_mac_obj->join_status = NOT_JOINED;
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    lr1_mac_obj->session_counter_context_valid = false;
+    memset( &lr1_mac_obj->session_context, 0, sizeof( lr1_mac_obj->session_context ) );
+#endif
     lr1mac_core_abort( lr1_mac_obj );
     smtc_real_init_join_snapshot_channel_mask( lr1_mac_obj );
     lr1_mac_obj->retry_join_cpt = 0;
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    save_devnonce_rst( lr1_mac_obj );
+    lr1mac_core_context_save( lr1_mac_obj );
+#endif
 }
 
 /**************************************************/
@@ -676,6 +710,24 @@ lr1mac_states_t lr1mac_core_state_get( lr1_stack_mac_t* lr1_mac_obj )
 /**************************************************/
 void lr1mac_core_context_save( lr1_stack_mac_t* lr1_mac_obj )
 {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    lr1mac_nvm_context_t context = { 0 };
+
+    context.mac.adr_custom            = lr1_mac_obj->adr_custom[0];
+    context.mac.region_type           = lr1_mac_obj->real->region_type;
+    context.mac.certification_enabled = lr1_mac_obj->is_lorawan_modem_certification_enabled;
+    context.mac.crc = lr1mac_utilities_crc( ( uint8_t* ) &context.mac, sizeof( context.mac ) - sizeof( context.mac.crc ) );
+
+    build_session_context( lr1_mac_obj, &context.session );
+
+    if( ( memcmp( &context.mac, &lr1_mac_obj->mac_context, sizeof( context.mac ) ) != 0 ) ||
+        ( memcmp( &context.session, &lr1_mac_obj->session_context, sizeof( context.session ) ) != 0 ) )
+    {
+        lr1_mac_obj->mac_context     = context.mac;
+        lr1_mac_obj->session_context = context.session;
+        smtc_modem_hal_context_store( CONTEXT_LR1MAC, ( uint8_t* ) &context, sizeof( context ) );
+    }
+#else
     // don't save in nvm if only nb of reset has been modified
     if( ( lr1_mac_obj->mac_context.adr_custom != lr1_mac_obj->adr_custom[0] ) ||
         ( lr1_mac_obj->mac_context.region_type != lr1_mac_obj->real->region_type ) ||
@@ -689,12 +741,8 @@ void lr1mac_core_context_save( lr1_stack_mac_t* lr1_mac_obj )
 
         smtc_modem_hal_context_store( CONTEXT_LR1MAC, ( uint8_t* ) &( lr1_mac_obj->mac_context ),
                                       sizeof( lr1_mac_obj->mac_context ) );
-
-        // dummy context reading to ensure context store is done before exiting the function
-        mac_context_t dummy_context = { 0 };
-        smtc_modem_hal_context_restore( CONTEXT_LR1MAC, ( uint8_t* ) &dummy_context,
-                                        sizeof( lr1_mac_obj->mac_context ) );
     }
+#endif
 }
 /**************************************************/
 /*   LoraWan  lr1mac_core_next_max_payload_length_get  Method     */
@@ -720,6 +768,16 @@ uint32_t lr1mac_core_next_frequency_get( lr1_stack_mac_t* lr1_mac_obj )
 
 void lr1mac_core_factory_reset( lr1_stack_mac_t* lr1_mac_obj )
 {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    lr1mac_nvm_context_t context = { 0 };
+
+    lr1_mac_obj->join_status                   = NOT_JOINED;
+    lr1_mac_obj->session_counter_context_valid = false;
+    memset( &lr1_mac_obj->mac_context, 0, sizeof( lr1_mac_obj->mac_context ) );
+    memset( &lr1_mac_obj->session_context, 0, sizeof( lr1_mac_obj->session_context ) );
+    smtc_modem_hal_context_store( CONTEXT_LR1MAC, ( uint8_t* ) &context, sizeof( context ) );
+    save_devnonce_rst( lr1_mac_obj );
+#else
     lr1_mac_obj->mac_context.adr_custom            = lr1_mac_obj->adr_custom[0];
     lr1_mac_obj->mac_context.region_type           = lr1_mac_obj->real->region_type;
     lr1_mac_obj->mac_context.certification_enabled = lr1_mac_obj->is_lorawan_modem_certification_enabled;
@@ -728,10 +786,7 @@ void lr1mac_core_factory_reset( lr1_stack_mac_t* lr1_mac_obj )
 
     smtc_modem_hal_context_store( CONTEXT_LR1MAC, ( uint8_t* ) &( lr1_mac_obj->mac_context ),
                                   sizeof( lr1_mac_obj->mac_context ) );
-
-    // dummy context reading to ensure context store is done before exiting the function
-    mac_context_t dummy_context = { 0 };
-    smtc_modem_hal_context_restore( CONTEXT_LR1MAC, ( uint8_t* ) &dummy_context, sizeof( lr1_mac_obj->mac_context ) );
+#endif
 }
 
 lr1mac_activation_mode_t lr1mac_core_get_activation_mode( lr1_stack_mac_t* lr1_mac_obj )
@@ -771,6 +826,30 @@ int16_t lr1mac_core_last_rssi_get( lr1_stack_mac_t* lr1_mac_obj )
 
 status_lorawan_t lr1mac_core_context_load( lr1_stack_mac_t* lr1_mac_obj )
 {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    lr1mac_nvm_context_t context = { 0 };
+    memset( &lr1_mac_obj->session_context, 0, sizeof( lr1_mac_obj->session_context ) );
+    smtc_modem_hal_context_restore( CONTEXT_LR1MAC, ( uint8_t* ) &context, sizeof( context ) );
+
+    if( lr1mac_utilities_crc( ( uint8_t* ) &context.mac, sizeof( context.mac ) - sizeof( context.mac.crc ) ) ==
+        context.mac.crc )
+    {
+        lr1_mac_obj->mac_context       = context.mac;
+        lr1_mac_obj->adr_custom[0]     = lr1_mac_obj->mac_context.adr_custom;
+        lr1_mac_obj->real->region_type = ( smtc_real_region_types_t ) lr1_mac_obj->mac_context.region_type;
+        lr1_mac_obj->is_lorawan_modem_certification_enabled = lr1_mac_obj->mac_context.certification_enabled;
+
+        if( ( context.session.version == LR1MAC_SESSION_CONTEXT_VERSION ) &&
+            ( lr1mac_utilities_crc( ( uint8_t* ) &context.session,
+                                     sizeof( context.session ) - sizeof( context.session.crc ) ) ==
+              context.session.crc ) )
+        {
+            lr1_mac_obj->session_context = context.session;
+        }
+
+        return OKLORAWAN;
+    }
+#else
     smtc_modem_hal_context_restore( CONTEXT_LR1MAC, ( uint8_t* ) &( lr1_mac_obj->mac_context ),
                                     sizeof( lr1_mac_obj->mac_context ) );
 
@@ -783,10 +862,8 @@ status_lorawan_t lr1mac_core_context_load( lr1_stack_mac_t* lr1_mac_obj )
 
         return OKLORAWAN;
     }
-    else
-    {  // == factory reset
-        return ERRORLORAWAN;
-    }
+#endif
+    return ERRORLORAWAN;  // factory reset
 }
 receive_win_t lr1mac_core_rx_window_get( lr1_stack_mac_t* lr1_mac_obj )
 {
@@ -1150,6 +1227,13 @@ void lr1mac_core_abort( lr1_stack_mac_t* lr1_mac_obj )
 
 static void lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj )
 {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    const bool persist_session = ( lr1_mac_obj->valid_rx_packet == JOIN_ACCEPT_PACKET ) ||
+                                 ( lr1_mac_obj->valid_rx_packet == USER_RX_PACKET ) ||
+                                 ( lr1_mac_obj->valid_rx_packet == USERRX_FOPTSPACKET ) ||
+                                 ( lr1_mac_obj->valid_rx_packet == NWKRXPACKET );
+#endif
+
     lr1_mac_obj->radio_process_state = RADIOSTATE_IDLE;
 
     if( lr1_mac_obj->valid_rx_packet == JOIN_ACCEPT_PACKET )
@@ -1160,7 +1244,9 @@ static void lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj )
             //@note because datarate Distribution has been changed during join
             lr1_mac_obj->adr_mode_select = lr1_mac_obj->adr_mode_select_tmp;
             smtc_real_set_dr_distribution( lr1_mac_obj, lr1_mac_obj->adr_mode_select_tmp );
+#if !defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
             save_devnonce_rst( lr1_mac_obj );
+#endif
         }
         else
         {
@@ -1172,6 +1258,17 @@ static void lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj )
         lr1_stack_mac_cmd_parse( lr1_mac_obj );
     }
     lr1_stack_mac_update( lr1_mac_obj );
+
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    if( persist_session && ( lr1_mac_obj->join_status == JOINED ) )
+    {
+        if( lr1_mac_obj->valid_rx_packet == JOIN_ACCEPT_PACKET )
+        {
+            lr1_mac_obj->session_counter_context_valid = true;
+        }
+        lr1mac_core_persist_session( lr1_mac_obj );
+    }
+#endif
 
     /// If those MAC commands are not acked, set as not requested ///
     if( lr1_mac_obj->link_check_user_req == USER_MAC_REQ_SENT )
@@ -1224,6 +1321,129 @@ static void lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj )
     lr1_mac_obj->valid_rx_packet = NO_MORE_VALID_RX_PACKET;
 }
 
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+void lr1mac_core_persist_session( lr1_stack_mac_t* lr1_mac_obj )
+{
+    lr1mac_core_context_save( lr1_mac_obj );
+    save_devnonce_rst( lr1_mac_obj );
+}
+
+/**
+ * @brief Build the persistent session context from the joined LoRaWAN MAC state.
+ *
+ * @param lr1_mac_obj LoRaWAN MAC object containing the active session.
+ * @param session_context Persistent session context to populate.
+ */
+static void build_session_context( const lr1_stack_mac_t* lr1_mac_obj,
+                                   lr1mac_session_context_t* session_context )
+{
+    memset( session_context, 0, sizeof( *session_context ) );
+
+    if( lr1_mac_obj->join_status != JOINED )
+    {
+        return;
+    }
+
+    session_context->version             = LR1MAC_SESSION_CONTEXT_VERSION;
+    session_context->dev_addr             = lr1_mac_obj->dev_addr;
+    session_context->tx_data_rate_adr     = lr1_mac_obj->tx_data_rate_adr;
+    session_context->tx_power             = lr1_mac_obj->tx_power;
+    session_context->nb_trans             = lr1_mac_obj->nb_trans;
+    session_context->rx2_data_rate        = lr1_mac_obj->rx2_data_rate;
+    session_context->rx2_frequency        = lr1_mac_obj->rx2_frequency;
+    session_context->rx1_dr_offset        = lr1_mac_obj->rx1_dr_offset;
+    session_context->rx1_delay_s          = lr1_mac_obj->rx1_delay_s;
+    session_context->max_erp_dbm          = lr1_mac_obj->max_erp_dbm;
+    session_context->uplink_dwell_time    = lr1_mac_obj->uplink_dwell_time;
+    session_context->downlink_dwell_time  = lr1_mac_obj->downlink_dwell_time;
+    session_context->max_duty_cycle_index = lr1_mac_obj->max_duty_cycle_index;
+    session_context->adr_ack_cnt          = lr1_mac_obj->adr_ack_cnt;
+    session_context->adr_ack_limit_init   = lr1_mac_obj->adr_ack_limit_init;
+    session_context->adr_ack_delay_init   = lr1_mac_obj->adr_ack_delay_init;
+    session_context->adr_ack_limit        = lr1_mac_obj->adr_ack_limit;
+    session_context->adr_ack_delay        = lr1_mac_obj->adr_ack_delay;
+    memcpy( session_context->join_nonce, lr1_mac_obj->join_nonce, sizeof( session_context->join_nonce ) );
+    memcpy( &session_context->region, &lr1_mac_obj->real->region, sizeof( session_context->region ) );
+    session_context->crc = lr1mac_utilities_crc(
+        ( uint8_t* ) session_context, sizeof( *session_context ) - sizeof( session_context->crc ) );
+}
+
+/**
+ * @brief Restore a validated joined session into the LoRaWAN MAC object.
+ *
+ * @param lr1_mac_obj LoRaWAN MAC object receiving the restored session.
+ */
+static void restore_session_context( lr1_stack_mac_t* lr1_mac_obj )
+{
+    const lr1mac_session_context_t* session_context = &lr1_mac_obj->session_context;
+
+    if( ( session_context->version != LR1MAC_SESSION_CONTEXT_VERSION ) ||
+        ( lr1_mac_obj->session_counter_context_valid == false ) ||
+        ( memcmp( session_context->join_nonce, lr1_mac_obj->join_nonce, sizeof( session_context->join_nonce ) ) != 0 ) )
+    {
+        lr1_mac_obj->session_counter_context_valid = false;
+        memset( &lr1_mac_obj->session_context, 0, sizeof( lr1_mac_obj->session_context ) );
+        return;
+    }
+
+    memcpy( &lr1_mac_obj->real->region, &session_context->region, sizeof( session_context->region ) );
+    lr1_mac_obj->dev_addr             = session_context->dev_addr;
+    lr1_mac_obj->tx_data_rate_adr     = session_context->tx_data_rate_adr;
+    lr1_mac_obj->tx_power             = session_context->tx_power;
+    lr1_mac_obj->rx2_data_rate        = session_context->rx2_data_rate;
+    lr1_mac_obj->rx2_frequency        = session_context->rx2_frequency;
+    lr1_mac_obj->rx1_dr_offset        = session_context->rx1_dr_offset;
+    lr1_mac_obj->rx1_delay_s          = session_context->rx1_delay_s;
+    lr1_mac_obj->max_erp_dbm          = session_context->max_erp_dbm;
+    lr1_mac_obj->uplink_dwell_time    = session_context->uplink_dwell_time;
+    lr1_mac_obj->downlink_dwell_time  = session_context->downlink_dwell_time;
+    lr1_mac_obj->max_duty_cycle_index = session_context->max_duty_cycle_index;
+    lr1_mac_obj->adr_ack_cnt          = session_context->adr_ack_cnt;
+    lr1_mac_obj->adr_ack_limit_init   = session_context->adr_ack_limit_init;
+    lr1_mac_obj->adr_ack_delay_init   = session_context->adr_ack_delay_init;
+    lr1_mac_obj->adr_ack_limit        = session_context->adr_ack_limit;
+    lr1_mac_obj->adr_ack_delay        = session_context->adr_ack_delay;
+    lr1_mac_obj->adr_ack_req         = ( session_context->adr_ack_cnt >= session_context->adr_ack_limit ) ? 1 : 0;
+    lr1_mac_obj->join_status         = JOINED;
+    lr1_mac_obj->lr1mac_state        = LWPSTATE_IDLE;
+    lr1_mac_obj->radio_process_state = RADIOSTATE_IDLE;
+
+    /* Rebuild volatile ADR distribution state without resetting restored network parameters. */
+    smtc_real_set_dr_distribution( lr1_mac_obj, lr1_mac_obj->adr_mode_select );
+    smtc_real_get_next_dr( lr1_mac_obj );
+    lr1_mac_obj->nb_trans     = session_context->nb_trans;
+    lr1_mac_obj->nb_trans_cpt = session_context->nb_trans;
+}
+
+/**
+ * @brief Persist the frame counters and optionally reserve the next uplink counter.
+ *
+ * @param lr1_mac_obj LoRaWAN MAC object containing the counters to persist.
+ * @param reserve_next_uplink Whether to persist the next FCntUp value before transmission.
+ */
+static void save_counter_context( const lr1_stack_mac_t* lr1_mac_obj, bool reserve_next_uplink )
+{
+    lr1_counter_context_t ctx = { 0 };
+
+    ctx.devnonce = lr1_mac_obj->dev_nonce;
+    ctx.nb_reset = lr1_mac_obj->nb_of_reset;
+    memcpy( ctx.join_nonce, lr1_mac_obj->join_nonce, sizeof( ctx.join_nonce ) );
+    if( lr1_mac_obj->join_status == JOINED )
+    {
+        ctx.rfu[0] = lr1_mac_obj->fcnt_up + ( reserve_next_uplink ? 1U : 0U );
+        ctx.rfu[1] = lr1_mac_obj->fcnt_dwn;
+        ctx.rfu[2] = LR1MAC_COUNTER_CONTEXT_MAGIC;
+    }
+    ctx.crc = lr1mac_utilities_crc( ( uint8_t* ) &ctx, sizeof( ctx ) - sizeof( ctx.crc ) );
+
+    smtc_modem_hal_context_store( CONTEXT_DEVNONCE, ( uint8_t* ) &ctx, sizeof( ctx ) );
+}
+
+static void save_devnonce_rst( const lr1_stack_mac_t* lr1_mac_obj )
+{
+    save_counter_context( lr1_mac_obj, false );
+}
+#else
 static void save_devnonce_rst( const lr1_stack_mac_t* lr1_mac_obj )
 {
     lr1_counter_context_t ctx = { 0 };
@@ -1231,13 +1451,11 @@ static void save_devnonce_rst( const lr1_stack_mac_t* lr1_mac_obj )
     ctx.devnonce = lr1_mac_obj->dev_nonce;
     ctx.nb_reset = lr1_mac_obj->nb_of_reset;
     memcpy( ctx.join_nonce, lr1_mac_obj->join_nonce, sizeof( ctx.join_nonce ) );
-    ctx.crc = lr1mac_utilities_crc( ( uint8_t* ) &ctx, sizeof( ctx ) - 4 );
+    ctx.crc = lr1mac_utilities_crc( ( uint8_t* ) &ctx, sizeof( ctx ) - sizeof( ctx.crc ) );
 
     smtc_modem_hal_context_store( CONTEXT_DEVNONCE, ( uint8_t* ) &ctx, sizeof( ctx ) );
-    // dummy context reading to ensure context store is done before exiting the function
-    lr1_counter_context_t dummy_context = { 0 };
-    smtc_modem_hal_context_restore( CONTEXT_DEVNONCE, ( uint8_t* ) &dummy_context, sizeof( dummy_context ) );
 }
+#endif
 
 static void load_devnonce_reset( lr1_stack_mac_t* lr1_mac_obj )
 {
@@ -1249,6 +1467,14 @@ static void load_devnonce_reset( lr1_stack_mac_t* lr1_mac_obj )
         lr1_mac_obj->dev_nonce   = ctx.devnonce;
         lr1_mac_obj->nb_of_reset = ctx.nb_reset;
         memcpy( lr1_mac_obj->join_nonce, ctx.join_nonce, sizeof( lr1_mac_obj->join_nonce ) );
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+        if( ctx.rfu[2] == LR1MAC_COUNTER_CONTEXT_MAGIC )
+        {
+            lr1_mac_obj->fcnt_up                       = ctx.rfu[0];
+            lr1_mac_obj->fcnt_dwn                      = ctx.rfu[1];
+            lr1_mac_obj->session_counter_context_valid = true;
+        }
+#endif
     }
     else
     {

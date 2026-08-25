@@ -249,10 +249,19 @@ void modem_supervisor_init( void ( *callback )( void ), radio_planner_t* rp,
     class_b_bit                   = false;
 
     lorawan_api_init( rp );
-    lorawan_api_dr_strategy_set( STATIC_ADR_MODE );
+    // A restored session already contains the active network-controlled ADR parameters.
+    if( lorawan_api_isjoined( ) != JOINED )
+    {
+        lorawan_api_dr_strategy_set( STATIC_ADR_MODE );
+    }
+#if !defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
     lorawan_api_join_status_clear( );
+#endif
 
     modem_context_init( );
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+    set_modem_status_modem_joined( lorawan_api_isjoined( ) == JOINED );
+#endif
     modem_event_init( );
     modem_supervisor_init_task( );
     modem_load_context( );
