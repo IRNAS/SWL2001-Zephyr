@@ -358,6 +358,12 @@ void lr1mac_class_c_mac_rp_callback( lr1mac_class_c_t* class_c_obj )
 
             if( class_c_obj->valid_rx_packet == USER_RX_PACKET )
             {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+                if( class_c_obj->rx_session_index == RX_SESSION_UNICAST )
+                {
+                    lr1mac_core_persist_session( class_c_obj->lr1_mac );
+                }
+#endif
                 SMTC_MODEM_HAL_TRACE_ARRAY_DEBUG( "RxC app Payload", class_c_obj->rx_payload,
                                                   class_c_obj->rx_payload_size );
                 class_c_obj->rx_metadata.rx_datarate     = RX_SESSION_PARAM_CURRENT->rx_data_rate;

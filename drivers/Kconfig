@@ -19,6 +19,12 @@ config LORA_BASICS_MODEM_USER_STORAGE_IMPL
 
 if LORA_BASICS_MODEM
 
+config LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION
+    bool "Persist the LoRaWAN join session"
+    default n
+    help
+      Preserve a valid LoRaWAN join session and frame counters across device reboots.
+
 config LORA_BASICS_MODEM_USE_GNSS
     bool "Enable gnss almanac update features"
     default n
@@ -96,6 +102,15 @@ config LORA_BASICS_MODEM_REGION_US_915
 config LORA_BASICS_MODEM_REGION_WW_2G4
     bool "Enable WW_2G4 region"
     default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_S_BAND_2G
+    bool "Enable S_BAND_2G region"
+    default y if LORA_BASICS_MODEM_ENABLE_ALL_REGIONS
+
+config LORA_BASICS_MODEM_REGION_S_BAND_2G_SINGLE_DR
+    bool "Enable single datarate for S_BAND_2G region"
+    depends on LORA_BASICS_MODEM_REGION_S_BAND_2G
+    default n
 
 config LORA_BASICS_MODEM_D2D
     bool "Enable class B device to device protocol support"

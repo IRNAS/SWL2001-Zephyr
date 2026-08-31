@@ -297,6 +297,11 @@ const char *smtc_modem_region_to_str(const smtc_modem_region_t value)
       return (const char *) "SMTC_MODEM_REGION_CN_470_RP_1_0";
     }
 
+    case SMTC_MODEM_REGION_S_BAND_2G:
+    {
+      return (const char *) "SMTC_MODEM_REGION_S_BAND_2G";
+    }
+
     default:
     {
       return (const char *) "Unknown";

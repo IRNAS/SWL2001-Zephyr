@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-31
+
+### Added
+
+-   Add s-band frequency region.
+-   Add reboot persistent join session.
+
 ## [1.4.2] - 2024-06-19
+
+### Fixed
+
+-   Fix implicit declaration warning due to missing `version.h`.
 
 ## [1.4.1] - 2024-06-19
 
@@ -87,7 +98,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   stream
     -   tx_rx_continous
 
-[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.4.2...HEAD
+[Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.5.0...HEAD
+
+[1.5.0]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.4.2...v1.5.0
 
 [1.4.2]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.4.1...v1.4.2
 

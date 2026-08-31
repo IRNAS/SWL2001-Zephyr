@@ -530,6 +530,12 @@ void smtc_ping_slot_mac_rp_callback( smtc_ping_slot_t* ping_slot_obj )
 
             if( ping_slot_obj->valid_rx_packet == USER_RX_PACKET )
             {
+#if defined( LORA_BASICS_MODEM_PERSISTENT_JOIN_SESSION )
+                if( ping_slot_obj->rx_session_index == RX_SESSION_UNICAST )
+                {
+                    lr1mac_core_persist_session( ping_slot_obj->lr1_mac );
+                }
+#endif
                 SMTC_MODEM_HAL_TRACE_ARRAY( "RxB app Payload", ping_slot_obj->rx_payload,
                                             ping_slot_obj->rx_payload_size );
 
