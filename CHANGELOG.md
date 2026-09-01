@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Changed
+
+-   Change development form the dev/master model to trunk-based development. CIs were updated.
+
 ## [1.5.0] - 2026-08-31
 
 ### Added
