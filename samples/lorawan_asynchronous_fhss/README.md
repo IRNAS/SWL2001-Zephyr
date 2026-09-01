@@ -1,48 +1,71 @@
 # LoRaWAN application sending asynchronous LR-FHSS uplinks
 
+<!-- markdownlint-disable MD040 -->
+
 This sample is based on `SWSD001/apps/examples/lorawan_asynchronous_fhss`.
 
-All configuration of the sample is done at the top of `main.c`, where LoRaWAN keys and other settings can be set.
+All configuration of the sample is done at the top of `main.c`, where LoRaWAN keys and other
+settings can be set.
 
-## Sample behaviour
+## Sample behavior
 
-The sample first initializes the Basics modem and button 2 on the DK.
-The device will attempt to join the LoRaWAN network.
-After joining, a press on `button 2` on the DK will send an uplink message with the number of button presses.
+The sample first initializes the Basics modem and button 2 on the DK. The device will attempt to
+join the LoRaWAN network. After joining, a press on `button 2` on the DK will send an uplink message
+with the number of button presses.
 
-Upon reception of any LinkADRReq command from the network server, the application will request the list of available datarates from LoRa Basics Modem. If LR-FHSS datarates are available, a custom ADR profile will be programmed so that all future uplinks will be transmitted over LR-FHSS. If a LinkADRReq command is never received, or if no LR-FHSS datarates are available, the application will not change the ADR profile and LoRa uplinks will be transmitted.
+Upon reception of any LinkADRReq command from the network server, the application will request the
+list of available datarates from LoRa Basics Modem. If LR-FHSS datarates are available, a custom ADR
+profile will be programmed so that all future uplinks will be transmitted over LR-FHSS. If a
+LinkADRReq command is never received, or if no LR-FHSS datarates are available, the application will
+not change the ADR profile and LoRa uplinks will be transmitted.
 
-Note that for this application to work as expected for the EU-868 region, the LoRaWAN network server must first configure LR-FHSS channels using the NewChannelReq command, and then activate those channels for LR-FHSS datarates 8-9, 10-11, or 8-11 in the channel mask using the LinkADRReq command. This is not standard network server behavior, and requires a custom network server installation, as described below.
+Note that for this application to work as expected for the EU-868 region, the LoRaWAN network server
+must first configure LR-FHSS channels using the NewChannelReq command, and then activate those
+channels for LR-FHSS datarates 8-9, 10-11, or 8-11 in the channel mask using the LinkADRReq command.
+This is not standard network server behavior, and requires a custom network server installation, as
+described below.
 
-For this application to work as expected for the US-915 region, the LoRaWAN network server must activate one of the TX channels 64-71 for at least one of the LR-FHSS datarates 5-6 in the channel mask using the LinkADRReq command. This may require a custom network server installation, as described below.
+For this application to work as expected for the US-915 region, the LoRaWAN network server must
+activate one of the TX channels 64-71 for at least one of the LR-FHSS datarates 5-6 in the channel
+mask using the LinkADRReq command. This may require a custom network server installation, as
+described below.
 
-For this application to work as expected for the AU-915 region, the LoRaWAN network server must activate one of the TX channels 64-71 for the LR-FHSS datarate 7 in the channel mask using the LinkADRReq command. This may require a custom network server installation, as described below.
+For this application to work as expected for the AU-915 region, the LoRaWAN network server must
+activate one of the TX channels 64-71 for the LR-FHSS datarate 7 in the channel mask using the
+LinkADRReq command. This may require a custom network server installation, as described below.
 
 ### Known limitations
 
-For the US-915 and AU-915 regions, this application currently must use a relatively wide Rx1 receive window. In order to do this, `smtc_modem_set_crystal_error_ppm()` is called during LoRa Basics Modem initialization.
+For the US-915 and AU-915 regions, this application currently must use a relatively wide Rx1 receive
+window. In order to do this, `smtc_modem_set_crystal_error_ppm()` is called during LoRa Basics Modem
+initialization.
 
-This demo application only supports the cases where datarates 8-9, 10-11, or 8-11 are supported by the gateway.
+This demo application only supports the cases where datarates 8-9, 10-11, or 8-11 are supported by
+the gateway.
 
 ### Prerequisites
 
-This example assumes that a ChirpStack network server stack has been downloaded and installed. The stack can be installed on a Debian or Ubuntu machine, or on a Raspberry Pi, as described [here](https://www.chirpstack.io/project/guides/debian-ubuntu/).
+This example assumes that a ChirpStack network server stack has been downloaded and installed. The
+stack can be installed on a Debian or Ubuntu machine, or on a Raspberry Pi, as described in the
+[ChirpStack installation guide](https://www.chirpstack.io/project/guides/debian-ubuntu/).
 
-You must follow the 'Connecting a gateway' and 'Connecting a device' instructions as well, defining a device supporting LoRaWAN Mac version 1.0.4, with regional parameters revision 'RP002-1.0.3', ADR algorithm 'LoRa and LR-FHSS ADR algorithm', and 'Device supports OTAA'.
-
+You must follow the 'Connecting a gateway' and 'Connecting a device' instructions as well, defining
+a device supporting LoRaWAN Mac version 1.0.4, with regional parameters revision 'RP002-1.0.3', ADR
+algorithm 'LoRa and LR-FHSS ADR algorithm', and 'Device supports OTAA'.
 
 ## Expected Behavior for EU-868 region
 
-Here follow the steps that shall be seen in logs to indicate the expected behavior of the application:
+Here follow the steps that shall be seen in logs to indicate the expected behavior of the
+application:
 
 ### Device starts and reset
 
- ```
- INFO: Modem Initialization
- Region = US915
- INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
- INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
- ```
+```
+INFO: Modem Initialization
+Region = US915
+INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
+INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
+```
 
 ### Pushbutton pressed before join
 
@@ -72,7 +95,8 @@ MacTxFrequency [ 8 ] = 867200000, DrMin = 8, DrMax = 9
 MacTxFrequency [ 9 ] = 868600000, DrMin = 10, DrMax = 11
 ```
 
-In this particular case, the new channel 8 is configured to use LR-FHSS datarates 8 and 9, and the new channel 9 is configured to use LR-FHSS datarates 10 and 11.
+In this particular case, the new channel 8 is configured to use LR-FHSS datarates 8 and 9, and the
+new channel 9 is configured to use LR-FHSS datarates 10 and 11.
 
 ### LinkADRReq command is received from the network server
 
@@ -96,9 +120,12 @@ INFO: LR-FHSS datarates 8-11 are available
 
 ```
 
-In this particular case, the new LR-FHSS channels 8 and 9 shown above are enabled (in addition to channels 0 through 7). These two channels together permit the use of LR-FHSS datarates 8, 9, 10, and 11.
+In this particular case, the new LR-FHSS channels 8 and 9 shown above are enabled (in addition to
+channels 0 through 7). These two channels together permit the use of LR-FHSS datarates 8, 9, 10,
+and 11.
 
-### Push button event occured, generating an LR-FHSS uplink
+### Push button event occurred, generating an LR-FHSS uplink
+
 ```
 INFO: ###### ===== BUTTON PUSH ==== ######
 Modem status: JOINED
@@ -117,6 +144,7 @@ INFO: Request uplink
 ```
 INFO: ###### ===== TX DONE EVENT ==== ######
 ```
+
 Will be followed by the uplink count, which is incremented on each uplink.
 
 ```
@@ -125,16 +153,17 @@ INFO: Uplink count: 1
 
 ## Expected Behavior for US-915 region
 
-Here follow the steps that shall be seen in logs to indicate the expected behavior of the application:
+Here follow the steps that shall be seen in logs to indicate the expected behavior of the
+application:
 
 ### Device starts and reset
 
- ```
- INFO: Modem Initialization
- Region = US915
- INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
- INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
- ```
+```
+INFO: Modem Initialization
+Region = US915
+INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
+INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
+```
 
 ### Pushbutton pressed before join
 
@@ -180,9 +209,12 @@ INFO: ###### ===== NEW LINK ADR EVENT ==== ######
 INFO: LR-FHSS datarates 5-6 are available
 ```
 
-In this particular case, the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 68 (64 + 4) shown above is enabled (in addition to various 125 kHz LoRa channels). This channel permits the use of LR-FHSS datarates 5 and 6.
+In this particular case, the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 68 (64 + 4) shown above is
+enabled (in addition to various 125 kHz LoRa channels). This channel permits the use of LR-FHSS
+datarates 5 and 6.
 
-### Push button event occured, generating an LR-FHSS uplink
+### Push button event occurred, generating an LR-FHSS uplink
+
 ```
 INFO: ###### ===== BUTTON PUSH ==== ######
 Modem status: JOINED
@@ -201,6 +233,7 @@ INFO: Request uplink
 ```
 INFO: ###### ===== TX DONE EVENT ==== ######
 ```
+
 Will be followed by the uplink count, which is incremented on each uplink.
 
 ```
@@ -209,16 +242,17 @@ INFO: Uplink count: 1
 
 ## Expected Behavior for AU-915 region
 
-Here follow the steps that shall be seen in logs to indicate the expected behavior of the application:
+Here follow the steps that shall be seen in logs to indicate the expected behavior of the
+application:
 
 ### Device starts and reset
 
- ```
- INFO: Modem Initialization
- Region = AU915
- INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
- INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
- ```
+```
+INFO: Modem Initialization
+Region = AU915
+INFO: ###### ===== LoRa Basics Modem LoRaWAN LR-FHSS asynchronous demo application ==== ######
+INFO: ###### ===== BASICS MODEM RESET EVENT ==== ######
+```
 
 ### Pushbutton pressed before join
 
@@ -264,9 +298,12 @@ INFO: ###### ===== NEW LINK ADR EVENT ==== ######
 INFO: LR-FHSS datarate1 7 is available
 ```
 
-In this particular case, the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 64 (64 + 0) shown above is enabled (in addition to various 125 kHz LoRa channels). This channel permits the use of LR-FHSS datarate 7.
+In this particular case, the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 64 (64 + 0) shown above is
+enabled (in addition to various 125 kHz LoRa channels). This channel permits the use of LR-FHSS
+datarate 7.
 
-### Push button event occured, generating an LR-FHSS uplink
+### Push button event occurred, generating an LR-FHSS uplink
+
 ```
 INFO: ###### ===== BUTTON PUSH ==== ######
 Modem status: JOINED
@@ -285,6 +322,7 @@ INFO: Request uplink
 ```
 INFO: ###### ===== TX DONE EVENT ==== ######
 ```
+
 Will be followed by the uplink count, which is incremented on each uplink.
 
 ```
@@ -293,9 +331,11 @@ INFO: Uplink count: 1
 
 ## ChirpStack Network Server configuration for LR-FHSS operation in the EU-868 region
 
-In order to get the network server to create the necessary LR-FHSS channels on the end device, it is necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file.
+In order to get the network server to create the necessary LR-FHSS channels on the end device, it is
+necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file.
 
-For the purposes of this demo, assume that your gateway is properly configured for the EU-868 region, and it has the following LR-FHSS channel configuration:
+For the purposes of this demo, assume that your gateway is properly configured for the EU-868
+region, and it has the following LR-FHSS channel configuration:
 
 ```
 { "freq_hz": 867200000, "ocw": 137000 },
@@ -307,9 +347,12 @@ For the purposes of this demo, assume that your gateway is properly configured f
 { "freq_hz": 868600000, "ocw": 336000 }
 ```
 
-According to `RP002-1.0.3 LoRaWAN Regional Parameters`, datarates 8 and 9 occupy 137 kHz, and datarates 10 and 11 occupy 336 kHz.
+According to `RP002-1.0.3 LoRaWAN Regional Parameters`, datarates 8 and 9 occupy 137 kHz, and
+datarates 10 and 11 occupy 336 kHz.
 
-If you wish to configure the network server to place datarates 8 and 9 in the 137 kHz channel at 867200000 Hz, add the following lines to the `[network_server.network_settings]` section.
+If you wish to configure the network server to place datarates 8 and 9 in the 137 kHz channel at
+867200000 Hz, add the following lines to the `[network_server.network_settings]` section.
+
 ```
     [[network_server.network_settings.extra_channels]]
     frequency=867200000
@@ -317,7 +360,9 @@ If you wish to configure the network server to place datarates 8 and 9 in the 13
     max_dr=9
 ```
 
-If you wish to configure the network server to place datarates 10 and 11 in the 336 kHz channel at 868600000 Hz, add the following lines to the `[network_server.network_settings]` section.
+If you wish to configure the network server to place datarates 10 and 11 in the 336 kHz channel at
+868600000 Hz, add the following lines to the `[network_server.network_settings]` section.
+
 ```
     [[network_server.network_settings.extra_channels]]
     frequency=868600000
@@ -328,44 +373,61 @@ If you wish to configure the network server to place datarates 10 and 11 in the 
 Make sure that name='EU868' in the '[network_server.band]' section
 
 Once this file has been edited, restart the network server:
-``` bash
-$ systemctl restart chirpstack-network-server
+
+```bash
+systemctl restart chirpstack-network-server
 ```
 
 ## ChirpStack Network Server configuration for LR-FHSS operation in the US-915 region
 
 According to `RP002-1.0.3 LoRaWAN Regional Parameters`, datarates 5 and 6 occupy 1523 kHz.
 
-For the purposes of this demo, assume that your gateway is properly configured for the US-915 region, and it has the following LR-FHSS channel configuration:
+For the purposes of this demo, assume that your gateway is properly configured for the US-915
+region, and it has the following LR-FHSS channel configuration:
 
 ```
 { "freq_hz": 909400000, "ocw": 1523000 } /* 1523kHz channel */
 ```
 
-Any of the 8 LR-FHSS upstream channels described in 'RP002-1.0.3 LoRaWAN Regional Parameters' can be used (903.0 to 914.2, stepping by 1.6 MHz), and depending on your gateway, you may be able to enable more than one. Here, we have chosen the 4th LR-FHSS channel, at 909.4 MHz (903.0 + 4 * 1.6  = 909.4). This corresponds to the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 68 (64 + 4).
+Any of the 8 LR-FHSS upstream channels described in 'RP002-1.0.3 LoRaWAN Regional Parameters' can be
+used (903.0 to 914.2, stepping by 1.6 MHz), and depending on your gateway, you may be able to enable
+more than one. Here, we have chosen the 4th LR-FHSS channel, at 909.4 MHz (903.0 + 4 \* 1.6 =
+909.4). This corresponds to the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 68 (64 + 4).
 
-In order to get the network server to activate the necessary LR-FHSS channels on the end device, it may be necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file. Make sure that the 'enabled_uplink_channels' variable of section '[network_server.network_settings]' contains channel 68, and that name='US_902_928' in the '[network_server.band]' section.
+In order to get the network server to activate the necessary LR-FHSS channels on the end device, it
+may be necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file.
+Make sure that the 'enabled_uplink_channels' variable of section '[network_server.network_settings]'
+contains channel 68, and that name='US_902_928' in the '[network_server.band]' section.
 
 If it was necessary to change this file, restart the network server:
-``` bash
-$ systemctl restart chirpstack-network-server
+
+```bash
+systemctl restart chirpstack-network-server
 ```
 
 ## ChirpStack Network Server configuration for LR-FHSS operation in the AU-915 region
 
 According to `RP002-1.0.3 LoRaWAN Regional Parameters`, datarate 7 occupies 1523 kHz.
 
-For the purposes of this demo, assume that your gateway is properly configured for the AU-915 region, and it has the following LR-FHSS channel configuration:
+For the purposes of this demo, assume that your gateway is properly configured for the AU-915
+region, and it has the following LR-FHSS channel configuration:
 
 ```
 { "freq_hz": 915900000, "ocw": 1523000 } /* 1523kHz channel */
 ```
 
-Any of the 8 LR-FHSS upstream channels described in 'RP002-1.0.3 LoRaWAN Regional Parameters' can be used (915.9 to 927.1, stepping by 1.6 MHz), and depending on your gateway, you may be able to enable more than one. Here, we have chosen the first LR-FHSS channel, at 915.9 MHz. This corresponds to the 500-kHz-LoRa/1523-kHz-LR-FHSS channel 64.
+Any of the 8 LR-FHSS upstream channels described in 'RP002-1.0.3 LoRaWAN Regional Parameters' can be
+used (915.9 to 927.1, stepping by 1.6 MHz), and depending on your gateway, you may be able to enable
+more than one. Here, we have chosen the first LR-FHSS channel, at 915.9 MHz. This corresponds to the
+500-kHz-LoRa/1523-kHz-LR-FHSS channel 64.
 
-In order to get the network server to activate the necessary LR-FHSS channels on the end device, it may be necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file. Make sure that the 'enabled_uplink_channels' variable of section '[network_server.network_settings]' contains channel 64, and that name='AU915' in the '[network_server.band]' section.
+In order to get the network server to activate the necessary LR-FHSS channels on the end device, it
+may be necessary to modify the `/etc/chirpstack-network-server/chirpstack-network-server.toml` file.
+Make sure that the 'enabled_uplink_channels' variable of section '[network_server.network_settings]'
+contains channel 64, and that name='AU915' in the '[network_server.band]' section.
 
 If it was necessary to change this file, restart the network server:
-``` bash
-$ systemctl restart chirpstack-network-server
+
+```bash
+systemctl restart chirpstack-network-server
 ```

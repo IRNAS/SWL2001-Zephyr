@@ -4,7 +4,7 @@ config LORA_BASICS_MODEM_PRINTERS
     default y if PRINTK
     default n
     help
-        Enable this to get acecss to functions that take a lora basics
+        Enable this to get access to functions that take a lora basics
         modem enum and return a static string, so it may be printed/logged
 
 

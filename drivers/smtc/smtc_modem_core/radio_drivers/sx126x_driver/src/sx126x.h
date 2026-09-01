@@ -1370,9 +1370,9 @@ sx126x_status_t sx126x_get_device_errors( const void* context, sx126x_errors_mas
 sx126x_status_t sx126x_clear_device_errors( const void* context );
 
 /**
- * @brief Get the parameter corresponding to a GFSK Rx bandwith immediately above the minimum requested one.
+ * @brief Get the parameter corresponding to a GFSK Rx bandwidth immediately above the minimum requested one.
  *
- * @param [in] bw Minimum required bandwith in Hz
+ * @param [in] bw Minimum required bandwidth in Hz
  * @param [out] param Pointer to a value to store the parameter
  *
  * @returns Operation status

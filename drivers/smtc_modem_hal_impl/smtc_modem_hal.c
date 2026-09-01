@@ -43,7 +43,7 @@ static struct smtc_modem_hal_cb *prv_hal_cb;
 static void *prv_smtc_modem_hal_timer_context;
 static void (*prv_smtc_modem_hal_timer_callback)(void *context);
 
-/* flag for enabling/disabling timer interrupt. This is set by the libraray during "critical"
+/* flag for enabling/disabling timer interrupt. This is set by the library during "critical"
  * sections */
 static bool prv_modem_irq_enabled;
 
@@ -269,7 +269,7 @@ bool smtc_modem_hal_get_crashlog_status(void)
 
 #else
 
-/* Context for loading from persistant storage */
+/* Context for loading from persistent storage */
 static uint8_t *prv_load_into;
 static uint32_t prv_load_size;
 

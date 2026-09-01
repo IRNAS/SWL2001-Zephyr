@@ -237,7 +237,7 @@ void smtc_ping_slot_init_after_beacon( smtc_ping_slot_t* ping_slot_obj, uint32_t
     }
 }
 
-/* function call by beacon_sniff obj at the begining of each beacon period
+/* function call by beacon_sniff obj at the beginning of each beacon period
  */
 void smtc_ping_slot_start( smtc_ping_slot_t* ping_slot_obj )
 {

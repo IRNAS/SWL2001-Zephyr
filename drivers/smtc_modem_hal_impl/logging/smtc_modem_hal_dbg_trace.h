@@ -34,25 +34,25 @@ extern "C" {
 
 #if (MODEM_HAL_DBG_TRACE)
 
-#define SMTC_MODEM_HAL_TRACE_PRINTF(...)	   smtc_modem_hal_print_trace(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_MSG(msg)		   smtc_modem_hal_print_trace("%s", msg);
-/* we ingore color */
+#define SMTC_MODEM_HAL_TRACE_PRINTF(...)           smtc_modem_hal_print_trace(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_MSG(msg)              smtc_modem_hal_print_trace("%s", msg);
+/* we ignore color */
 #define SMTC_MODEM_HAL_TRACE_MSG_COLOR(msg, color) smtc_modem_hal_print_trace("%s", msg);
-#define SMTC_MODEM_HAL_TRACE_INFO(...)		   smtc_modem_hal_print_trace_inf(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_WARNING(...)	   smtc_modem_hal_print_trace_wrn(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_ERROR(...)		   smtc_modem_hal_print_trace_err(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_INFO(...)             smtc_modem_hal_print_trace_inf(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_WARNING(...)          smtc_modem_hal_print_trace_wrn(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_ERROR(...)            smtc_modem_hal_print_trace_err(__VA_ARGS__);
 #define SMTC_MODEM_HAL_TRACE_ARRAY(msg, array, len)                                                \
 	smtc_modem_hal_print_trace_array_inf(msg, array, len);
 #define SMTC_MODEM_HAL_TRACE_PACKARRAY(msg, array, len) SMTC_MODEM_HAL_TRACE_ARRAY(msg, array, len);
 
 #if (MODEM_HAL_DEEP_DBG_TRACE)
 /* Deep debug trace default definitions*/
-#define SMTC_MODEM_HAL_TRACE_PRINTF_DEBUG(...)		 smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_MSG_DEBUG(msg)		 smtc_modem_hal_print_trace_dbg("%s", msg);
+#define SMTC_MODEM_HAL_TRACE_PRINTF_DEBUG(...) smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_MSG_DEBUG(msg)    smtc_modem_hal_print_trace_dbg("%s", msg);
 #define SMTC_MODEM_HAL_TRACE_MSG_COLOR_DEBUG(msg, color) smtc_modem_hal_print_trace_dbg("%s", msg);
-#define SMTC_MODEM_HAL_TRACE_INFO_DEBUG(...)		 smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_WARNING_DEBUG(...)		 smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
-#define SMTC_MODEM_HAL_TRACE_ERROR_DEBUG(...)		 smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_INFO_DEBUG(...)    smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_WARNING_DEBUG(...) smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
+#define SMTC_MODEM_HAL_TRACE_ERROR_DEBUG(...)   smtc_modem_hal_print_trace_dbg(__VA_ARGS__);
 #define SMTC_MODEM_HAL_TRACE_ARRAY_DEBUG(msg, array, len)                                          \
 	smtc_modem_hal_print_trace_array_dbg(msg, array, len);
 #define SMTC_MODEM_HAL_TRACE_PACKARRAY_DEBUG(...) SMTC_MODEM_HAL_TRACE_ARRAY_DEBUG(__VA_ARGS__)

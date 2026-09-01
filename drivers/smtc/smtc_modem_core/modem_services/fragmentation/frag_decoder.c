@@ -318,7 +318,7 @@ static uint16_t FragFindMissingIndex( uint16_t x );
 static uint16_t FragFindMissing( uint16_t fragCounter );
 
 /*!
- * \brief Extacts a row from the M2B binary matrix and expands it to a bitArray
+ * \brief Extracts a row from the M2B binary matrix and expands it to a bitArray
  *
  * \param [IN] bitArray  Pointer to the bit array
  * \param [IN] rowIndex  Matrix row index           Max FRAG_MAX_FRAME_LOSS
@@ -838,7 +838,7 @@ static uint16_t FragFindMissing( uint16_t fragCounter )
 }
 
 /*!
- * \brief Extacts a row from the binary matrix and expands it to a bitArray
+ * \brief Extracts a row from the binary matrix and expands it to a bitArray
  * Only extracts the triangular sup part of the matrix. So all bits left
  * of the triangle are 0.
  *

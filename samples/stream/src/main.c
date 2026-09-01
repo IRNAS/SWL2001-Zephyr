@@ -135,7 +135,8 @@ static void on_modem_reset(uint16_t reset_count)
  */
 static void on_modem_network_joined(void)
 {
-	/* Successfully joined, use built in alarm feature to trigger alarm calback after some delay
+	/* Successfully joined, use built in alarm feature to trigger alarm callback after some
+	 * delay
 	 */
 	smtc_modem_alarm_start_timer(APP_STREAM_CHUNK_PERIOD);
 	LOG_INF("Next alarm in: %d s", APP_STREAM_CHUNK_PERIOD);
@@ -162,7 +163,7 @@ static void on_modem_alarm(void)
 {
 	/* Schedule next alarm */
 	smtc_modem_alarm_start_timer(APP_STREAM_CHUNK_PERIOD);
-	LOG_INF("Next transmision in: %d s", APP_STREAM_CHUNK_PERIOD);
+	LOG_INF("Next transmission in: %d s", APP_STREAM_CHUNK_PERIOD);
 
 	/* Add data to stream */
 	add_chunk_to_stream_buffer(APP_STREAM_CHUNK_SIZE);

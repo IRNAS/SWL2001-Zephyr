@@ -173,12 +173,12 @@ static void on_modem_network_joined(void)
  * The app is expected to provide a valid environmental value for DM info purposes.
  * Return a negative error code if no valid value is available.
  *
- * These callbacks are only called if coresponding the DM info field is set:
+ * These callbacks are only called if corresponding the DM info field is set:
  * SMTC_MODEM_DM_FIELD_CHARGE
  * SMTC_MODEM_DM_FIELD_VOLTAGE
  * SMTC_MODEM_DM_FIELD_TEMPERATURE
  *
- * if the callbacks are not set, default (minumum) values will be used.
+ * if the callbacks are not set, default (minimum) values will be used.
  *
  */
 static int get_battery_level(uint32_t *battery_level)

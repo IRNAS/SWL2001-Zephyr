@@ -114,7 +114,7 @@ void main(void)
 
 	/* Enter main loop:
 	 * The fist call to smtc_modem_run_engine will trigger the reset callback.
-	 * We set our LoRaWAN configration then and start the join process - see reset().
+	 * We set our LoRaWAN configuration then and start the join process - see reset().
 	 *
 	 * After it is joined, a press to button2 on the DK will send an uplink message with the
 	 * number of button presses on port 102.
@@ -304,7 +304,7 @@ static void on_modem_tx_done(smtc_modem_event_txdone_status_t status)
 }
 
 /**
- * @brief Called when dowlink data has been received
+ * @brief Called when downlink data has been received
  *
  */
 void on_modem_down_data(int8_t rssi, int8_t snr, smtc_modem_event_downdata_window_t rx_window,

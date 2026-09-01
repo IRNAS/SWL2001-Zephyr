@@ -602,7 +602,7 @@ smtc_modem_return_code_t smtc_modem_time_start_sync_service( uint8_t            
             {
                 modem_supervisor_add_task_clock_sync_time_req( 1 );
 
-                // Force no synchronisation
+                // Force no synchronization
                 clock_sync_set_sync_lost( &( smtc_modem_services_ctx.clock_sync_ctx ) );
             }
         }
@@ -633,7 +633,7 @@ smtc_modem_return_code_t smtc_modem_time_stop_sync_service( uint8_t stack_id )
 
         modem_supervisor_remove_task_clock_sync( );
 
-        // Force no synchronisation
+        // Force no synchronization
         clock_sync_set_sync_lost( &( smtc_modem_services_ctx.clock_sync_ctx ) );
     }
     else
@@ -1061,9 +1061,9 @@ smtc_modem_return_code_t smtc_modem_multicast_set_grp_config( uint8_t stack_id, 
         modem_rc = SMTC_MODEM_RC_INVALID;
         break;
     case LORAWAN_MC_RC_ERROR_BUSY:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_CRYPTO:
-        // intentional fallthrought
+        // intentional fallthrough
     default:
         modem_rc = SMTC_MODEM_RC_FAIL;
         break;
@@ -1119,16 +1119,16 @@ smtc_modem_return_code_t smtc_modem_multicast_class_c_start_session( uint8_t sta
         modem_rc = SMTC_MODEM_RC_OK;
         break;
     case LORAWAN_MC_RC_ERROR_PARAM:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_INCOMPATIBLE_SESSION:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_BAD_ID:
         modem_rc = SMTC_MODEM_RC_INVALID;
         break;
     case LORAWAN_MC_RC_ERROR_BUSY:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_CLASS_NOT_ENABLED:
-        // intentional fallthrought
+        // intentional fallthrough
     default:
         modem_rc = SMTC_MODEM_RC_FAIL;
         break;
@@ -1240,16 +1240,16 @@ smtc_modem_return_code_t smtc_modem_multicast_class_b_start_session(
         modem_rc = SMTC_MODEM_RC_OK;
         break;
     case LORAWAN_MC_RC_ERROR_PARAM:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_INCOMPATIBLE_SESSION:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_BAD_ID:
         modem_rc = SMTC_MODEM_RC_INVALID;
         break;
     case LORAWAN_MC_RC_ERROR_BUSY:
-        // intentional fallthrought
+        // intentional fallthrough
     case LORAWAN_MC_RC_ERROR_CLASS_NOT_ENABLED:
-        // intentional fallthrought
+        // intentional fallthrough
     default:
         modem_rc = SMTC_MODEM_RC_FAIL;
         break;
@@ -1784,7 +1784,7 @@ smtc_modem_return_code_t smtc_modem_file_upload_init( uint8_t stack_id, uint8_t 
         SMTC_MODEM_HAL_TRACE_ERROR( "Upload file data is null\n" );
         return SMTC_MODEM_RC_INVALID;
     }
-    // save current file size and buff  (to keep hw modem compatiblity if needed)
+    // save current file size and buff  (to keep hw modem compatibility if needed)
     upload_size  = file_length;
     upload_pdata = ( uint32_t* ) file;
 

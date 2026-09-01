@@ -1,7 +1,7 @@
 /*!
  * \file      smtc_clock_sync.h
  *
- * \brief     Clock syncronization implementation
+ * \brief     Clock synchronization implementation
  *
  * The Clear BSD License
  * Copyright Semtech Corporation 2021. All rights reserved.
@@ -288,7 +288,7 @@ uint32_t clock_sync_get_invalid_time_delay_s( clock_sync_ctx_t* ctx );
 void clock_sync_reset_nb_time_req( clock_sync_ctx_t* ctx );
 
 /**
- * @brief Get the time left before concider time is no more valid
+ * @brief Get the time left before consider time is no more valid
  *
  * @param ctx
  * @return uint32_t

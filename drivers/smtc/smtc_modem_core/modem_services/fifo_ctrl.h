@@ -60,7 +60,7 @@ extern "C" {
  * --- PUBLIC TYPES ------------------------------------------------------------
  */
 
-// Return status fo get/set function
+// Return status for get/set function
 typedef enum fifo_return_status_e
 {
     FIFO_STATUS_OK,                // Return is OK
@@ -102,7 +102,7 @@ typedef struct fifo_ctrl_s
 void fifo_ctrl_init( fifo_ctrl_t* ctrl, uint8_t* buffer, const uint16_t buffer_size );
 
 /**
- * @brief Reset fifo manager (all datas & metadatas will be lost)
+ * @brief Reset fifo manager (all data & metadatas will be lost)
  *
  * @param ctrl Fifo to reset
  */

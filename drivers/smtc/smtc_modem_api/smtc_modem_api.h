@@ -605,7 +605,7 @@ smtc_modem_return_code_t smtc_modem_get_regional_params_version(
 /**
  * @brief Reset the modem
  *
- * @remark Resets modem transient state (including session information) by reseting the MCU.
+ * @remark Resets modem transient state (including session information) by resetting the MCU.
  *         Device Management Port, Modem Region and LoRaWan DevNonce are kept
  *
  * @return Modem return code as defined in @ref smtc_modem_return_code_t
@@ -1714,7 +1714,7 @@ smtc_modem_return_code_t smtc_modem_get_network_type( uint8_t stack_id, bool* ne
  * @param [in]  stack_id               Stack identifier
  * @param [in]  listening_duration_ms  Listening duration in ms to be configured
  * @param [in]  threshold_dbm          LBT threshold in dbm to be configured
- * @param [in]  bw_hz                  LBT bandwith in Hertz to be configured
+ * @param [in]  bw_hz                  LBT bandwidth in Hertz to be configured
  *
  * @return Modem return code as defined in @ref smtc_modem_return_code_t
  * @retval SMTC_MODEM_RC_OK                Command executed without errors
@@ -1730,7 +1730,7 @@ smtc_modem_return_code_t smtc_modem_lbt_set_parameters( uint8_t stack_id, uint32
  * @param [in]  stack_id               Stack identifier
  * @param [out] listening_duration_ms  Current listening duration in ms
  * @param [out] threshold_dbm          Current LBT threshold in dbm
- * @param [out] bw_hz                  Current LBT bandwith in Hertz
+ * @param [out] bw_hz                  Current LBT bandwidth in Hertz
  *
  * @return Modem return code as defined in @ref smtc_modem_return_code_t
  * @retval SMTC_MODEM_RC_OK                Command executed without errors

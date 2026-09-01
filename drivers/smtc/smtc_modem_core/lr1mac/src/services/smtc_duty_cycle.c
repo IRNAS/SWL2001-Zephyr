@@ -273,9 +273,9 @@ bool smtc_duty_cycle_is_toa_accepted( smtc_dtc_t* dtc_obj, uint32_t freq_hz, uin
     }
 
     uint8_t  band           = smtc_duty_cycle_get_band( dtc_obj, freq_hz );
-    uint32_t toa_consummed  = smtc_duty_cycle_get_band_consumed_time_ms( dtc_obj, band );
+    uint32_t toa_consumed  = smtc_duty_cycle_get_band_consumed_time_ms( dtc_obj, band );
     uint16_t duty_cycle     = dtc_obj->bands[band].duty_cycle_regulation;
-    int32_t  remaining_time = ( int32_t )( ( SMTC_DTC_PERIOD_MS / duty_cycle ) - toa_consummed );
+    int32_t  remaining_time = ( int32_t )( ( SMTC_DTC_PERIOD_MS / duty_cycle ) - toa_consumed );
 
     if( remaining_time < 0 )
     {
@@ -298,9 +298,9 @@ int32_t smtc_duty_cycle_band_get_available_toa_ms( smtc_dtc_t* dtc_obj, uint8_t 
         return true;
     }
 
-    uint32_t toa_consummed = smtc_duty_cycle_get_band_consumed_time_ms( dtc_obj, band );
+    uint32_t toa_consumed = smtc_duty_cycle_get_band_consumed_time_ms( dtc_obj, band );
     uint16_t duty_cycle    = dtc_obj->bands[band].duty_cycle_regulation;
-    int32_t  toa           = ( int32_t )( ( SMTC_DTC_PERIOD_MS / duty_cycle ) - toa_consummed );
+    int32_t  toa           = ( int32_t )( ( SMTC_DTC_PERIOD_MS / duty_cycle ) - toa_consumed );
 
     return toa;
 }

@@ -323,7 +323,7 @@ int ROSE_init( rose_t* ROSE, uint16_t windowLen, uint16_t minfree, uint8_t redun
 int ROSE_enable_encryption( rose_t* ROSE )
 {
     rose_rc_e rc = ROSE_ERROR;
-    // Do not allow encrytion mode change in case of on going stream
+    // Do not allow encryption mode change in case of on going stream
     if( ROSE->flags != ROSE_FIRST_DATA )
     {
         rc = ROSE_BUSY;
@@ -354,12 +354,12 @@ uint16_t ROSE_getPending( rose_t* ROSE )
 int ROSE_getStatus( rose_t* ROSE )
 {
     /* low latency mode will send an extra frame without systematic data but
-       redundancy data to achive target redundancy rate on all current
+       redundancy data to achieve target redundancy rate on all current
        systematic data. This reduce latency on the expense of sending extra
        frames. */
     if( ROSE->fill > ROSE->unsent  // still unsent data
         || ( ( ROSE->flags & ROSE_LOW_LATENCY ) &&
-             targetRedCnt( ROSE ) > ROSE->redcnt )  // still not reached redudancy level
+             targetRedCnt( ROSE ) > ROSE->redcnt )  // still not reached redundancy level
         // Server asked for SINFO message or WLACK from server is pending
         || ( ROSE->flags & ( ROSE_PEND_SINFO | ROSE_PEND_WLACK ) ) != 0 )
         return ROSE_PENDTX;
@@ -372,7 +372,7 @@ int ROSE_getData( rose_t* ROSE, uint32_t fcntup, uint8_t* frame, uint8_t* pTrans
     {
         if( pTransferSize[0] < SINFO_LEN )
         {
-            // FRMPayload too small to fit anything meaningfull
+            // FRMPayload too small to fit anything meaningful
         toosmall:
             pTransferSize[0] = 0;
             return ROSE_LFRAME_SIZE;
@@ -564,7 +564,7 @@ int ROSE_processDnFrame( rose_t* ROSE, const uint8_t* frmpayload, uint8_t flen )
         //
         // Case 2: we want to increase WL.
         //   In this case we need to ensure that the free space is big enough
-        //   to accomodate the additional redundancy + rvec space before
+        //   to accommodate the additional redundancy + rvec space before
         //   shifting
         //
         //   <--------------------------------ROSE_FIFO_SIZE----------->

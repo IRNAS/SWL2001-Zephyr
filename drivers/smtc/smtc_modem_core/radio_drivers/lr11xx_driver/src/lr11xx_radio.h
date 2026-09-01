@@ -480,12 +480,12 @@ lr11xx_status_t lr11xx_radio_set_pkt_address( const void* context, const uint8_t
                                               const uint8_t broadcast_address );
 
 /*!
- * @brief Alter the chip mode after successfull transmission or reception operation
+ * @brief Alter the chip mode after successful transmission or reception operation
  *
  * This setting is not used during Rx Duty Cycle mode or Auto Tx Rx.
  *
  * @param [in] context Chip implementation context
- * @param [in] fallback_mode The chip mode to enter after successfull transmission or reception.
+ * @param [in] fallback_mode The chip mode to enter after successful transmission or reception.
  *
  * @returns Operation status
  */

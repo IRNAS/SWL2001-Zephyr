@@ -83,7 +83,7 @@ static const char* smtc_name_lr_fhss_cr[] = { "CR 5/6", "CR 2/3", "CR 1/2", "CR 
  *-----------------------------------------------------------------------------------
  *--- PRIVATE FUNCTIONS DECLARATION -------------------------------------------------
  */
-static uint32_t    failsafe_timstamp_get( lr1_stack_mac_t* lr1_mac_obj );
+static uint32_t    failsafe_timestamp_get( lr1_stack_mac_t* lr1_mac_obj );
 static rp_status_t rp_status_get( lr1_stack_mac_t* lr1_mac_obj );
 static void        copy_user_payload( lr1_stack_mac_t* lr1_mac_obj, const uint8_t* data_in, const uint8_t size_in );
 static void        lr1mac_mac_update( lr1_stack_mac_t* lr1_mac_obj );
@@ -128,7 +128,7 @@ void lr1mac_core_init( lr1_stack_mac_t* lr1_mac_obj, smtc_real_t* real, smtc_lbt
 
     if( status != OKLORAWAN )
     {
-        // Possible update of nvm organisation --> try to recover
+        // Possible update of nvm organization --> try to recover
         try_recover_nvm( lr1_mac_obj );
         status = lr1mac_core_context_load( lr1_mac_obj );
     }
@@ -177,7 +177,7 @@ void lr1mac_core_init( lr1_stack_mac_t* lr1_mac_obj, smtc_real_t* real, smtc_lbt
     smtc_real_init( lr1_mac_obj );
     SMTC_MODEM_HAL_TRACE_PRINTF_DEBUG( "smtc_real_init done\n" );
 
-    // Initialize here adr_ack_limit_init and adr_ack_delay_init which are real dependant and must be updated after the
+    // Initialize here adr_ack_limit_init and adr_ack_delay_init which are real dependent and must be updated after the
     // real is initialized and not reinit after the join accept
     lr1_mac_obj->adr_ack_limit_init = smtc_real_get_adr_ack_limit( lr1_mac_obj );
     lr1_mac_obj->adr_ack_delay_init = smtc_real_get_adr_ack_delay( lr1_mac_obj );
@@ -210,7 +210,7 @@ lr1mac_states_t lr1mac_core_process( lr1_stack_mac_t* lr1_mac_obj )
 #endif
 
     if( ( lr1_mac_obj->lr1mac_state != LWPSTATE_IDLE ) &&
-        ( ( int32_t )( smtc_modem_hal_get_time_in_s( ) - failsafe_timstamp_get( lr1_mac_obj ) - FAILSAFE_DURATION ) >
+        ( ( int32_t )( smtc_modem_hal_get_time_in_s( ) - failsafe_timestamp_get( lr1_mac_obj ) - FAILSAFE_DURATION ) >
           0 ) )
     {
         smtc_modem_hal_lr1mac_panic( "FAILSAFE EVENT OCCUR (lr1mac_state:0x%x)\n", lr1_mac_obj->lr1mac_state );
@@ -654,7 +654,7 @@ status_lorawan_t lr1mac_core_dr_strategy_set( lr1_stack_mac_t* lr1_mac_obj, dr_s
     smtc_real_set_dr_distribution( lr1_mac_obj, adr_mode_select );
     status = smtc_real_get_next_dr( lr1_mac_obj );
 
-    if( status == ERRORLORAWAN )  // new adr profile no compatible with channel mask, retreive old adr profile
+    if( status == ERRORLORAWAN )  // new adr profile no compatible with channel mask, retrieve old adr profile
     {
         lr1_mac_obj->adr_mode_select = adr_mode_select_cpy;
         smtc_real_set_dr_distribution( lr1_mac_obj, adr_mode_select_cpy );
@@ -1206,7 +1206,7 @@ static void copy_user_payload( lr1_stack_mac_t* lr1_mac_obj, const uint8_t* data
              size_in );
 }
 
-static uint32_t failsafe_timstamp_get( lr1_stack_mac_t* lr1_mac_obj )
+static uint32_t failsafe_timestamp_get( lr1_stack_mac_t* lr1_mac_obj )
 {
     return lr1_mac_obj->timestamp_failsafe;
 }

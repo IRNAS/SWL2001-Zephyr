@@ -161,7 +161,7 @@ static modem_context_class_b_d2d_t class_b_d2d_ctx;
 static void ( *modem_lbm_notification_extended_1_callback )( void );
 static void ( *modem_lbm_notification_extended_2_callback )( void );
 static const void* modem_radio_ctx;  // use to save lr11xx user radio context needed to perform direct access to radio
-                                     // withing modem code (almanac update, crypto)
+                                     // within modem code (almanac update, crypto)
 
 #else
 struct
@@ -1179,7 +1179,7 @@ dm_rc_t set_dm_info( const uint8_t* requested_info_list, uint8_t len, dm_info_ra
 
     for( uint8_t i = 0; i < len; i++ )
     {
-        // Ignore DM status with variable length and forbiden fields
+        // Ignore DM status with variable length and forbidden fields
         if( ( requested_info_list[i] == DM_INFO_UPLOAD ) || ( requested_info_list[i] == DM_INFO_STREAM ) ||
             ( requested_info_list[i] == DM_INFO_ALCSYNC ) || ( requested_info_list[i] == DM_INFO_DBGRSP ) ||
             ( requested_info_list[i] == DM_INFO_GNSSLOC ) || ( requested_info_list[i] == DM_INFO_WIFILOC ) ||
@@ -1332,7 +1332,7 @@ bool dm_status_payload( uint8_t* dm_uplink_message, uint8_t* dm_uplink_message_l
             case DM_INFO_FIRMWARE: {
 #if defined( LR1110_MODEM_E ) && defined( ADD_SMTC_PATCH_UPDATE )
                 // return the crc value of fuota dedicated for test have to be
-                // re implement when fuota availble
+                // re implement when fuota available
                 *( p_tmp + 0 ) = crc_fw & 0xFF;
                 *( p_tmp + 1 ) = ( crc_fw >> 8 ) & 0xFF;
                 *( p_tmp + 2 ) = ( crc_fw >> 16 ) & 0xFF;
@@ -1722,7 +1722,7 @@ void modem_context_factory_reset( void )
 #if defined( ADD_SMTC_FILE_UPLOAD )
 uint8_t modem_context_compute_and_get_next_dm_upload_sctr( void )
 {
-    // take current and add 1 then mask to fit 4bits length (overflow is implicitely managed)
+    // take current and add 1 then mask to fit 4bits length (overflow is implicitly managed)
     modem_dm_upload_sctr = ( modem_dm_upload_sctr + 1 ) & 0xf;
     return modem_dm_upload_sctr;
 }

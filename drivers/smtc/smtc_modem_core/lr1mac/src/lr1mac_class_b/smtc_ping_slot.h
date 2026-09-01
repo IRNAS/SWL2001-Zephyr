@@ -81,14 +81,14 @@ typedef struct lr1mac_rx_b_session_param_e
     bool                                         enabled;                // Is the session enabled
     uint32_t                                     dev_addr;               // Device address
     uint32_t                                     fcnt_dwn;               // downlink frame counter
-    smtc_se_key_identifier_t                     nwk_skey;               // Newtork session key
+    smtc_se_key_identifier_t                     nwk_skey;               // Network session key
     smtc_se_key_identifier_t                     app_skey;               // Applicative session key
     uint8_t                                      rx_data_rate;           // Rx datarate
     uint32_t                                     rx_frequency;           // Rx Frequency
     smtc_multicast_fpending_bit_prioritization_t fpending_bit;           // FPending bit status
     uint8_t                                      ping_slot_periodicity;  // Value set by the user [0 to 7]
     smtc_ping_slot_parameters_t                  ping_slot_parameters;   // ping slot parameters
-    uint16_t                                     rx_window_symb;  // Number of Rx window symboles to listen preamble
+    uint16_t                                     rx_window_symb;  // Number of Rx window symbols to listen preamble
 } lr1mac_rx_session_b_param_t;
 
 /**
@@ -114,8 +114,8 @@ typedef struct smtc_ping_slot_s
     status_lorawan_t ( *d2d_check_fcnt_down_callback )( void*, uint32_t* fcnt_dwn_stack_tmp, uint32_t mic_in );
 
     lr1mac_down_metadata_t rx_metadata;      // Downlink metadata
-    uint8_t                rx_payload_size;  //@note Have to by replace by a fifo objet to manage class b
-    uint8_t                rx_payload[255];  //@note Have to by replace by a fifo objet to manage class b
+    uint8_t                rx_payload_size;  //@note Have to by replace by a fifo object to manage class b
+    uint8_t                rx_payload[255];  //@note Have to by replace by a fifo object to manage class b
 
     rx_session_type_t          rx_session_index;          // Current running Rx session  (unicast, multicast0, ...)
     lr1mac_rx_session_param_t  rx_session_param_unicast;  // Unicast session context

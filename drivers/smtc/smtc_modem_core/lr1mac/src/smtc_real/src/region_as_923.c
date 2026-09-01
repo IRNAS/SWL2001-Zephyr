@@ -100,22 +100,22 @@ void region_as_923_config( lr1_stack_mac_t* lr1_mac, uint8_t group_id )
 
     switch( group_id )
     {
-    case 1:  // AS923 groupe 1
+    case 1:  // AS923 group 1
         const_frequency_offset_hz = FREQOFFSET_GRP1_AS_923 * const_frequency_factor;
         const_freq_min            = FREQMIN_GRP1_AS_923;
         const_freq_max            = FREQMAX_GRP1_AS_923;
         break;
-    case 2:  // AS923 groupe 2
+    case 2:  // AS923 group 2
         const_frequency_offset_hz = FREQOFFSET_GRP2_AS_923 * const_frequency_factor;
         const_freq_min            = FREQMIN_GRP2_AS_923;
         const_freq_max            = FREQMAX_GRP2_AS_923;
         break;
-    case 3:  // AS923 groupe 3
+    case 3:  // AS923 group 3
         const_frequency_offset_hz = FREQOFFSET_GRP3_AS_923 * const_frequency_factor;
         const_freq_min            = FREQMIN_GRP3_AS_923;
         const_freq_max            = FREQMAX_GRP3_AS_923;
         break;
-    case 4:  // AS923 groupe 4
+    case 4:  // AS923 group 4
         const_frequency_offset_hz = FREQOFFSET_GRP4_AS_923 * const_frequency_factor;
         const_freq_min            = FREQMIN_GRP4_AS_923;
         const_freq_max            = FREQMAX_GRP4_AS_923;

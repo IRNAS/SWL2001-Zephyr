@@ -856,4 +856,3 @@ const char *smtc_modem_d2d_class_b_tx_done_status_to_str(const smtc_modem_d2d_cl
   }
 
 }
-

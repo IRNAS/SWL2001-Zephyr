@@ -137,10 +137,11 @@ static void on_modem_reset(uint16_t reset_count)
  */
 static void on_modem_network_joined(void)
 {
-	/* Successfully joined, use built in alarm feature to trigger alarm calback after some delay
+	/* Successfully joined, use built in alarm feature to trigger alarm callback after some
+	 * delay
 	 */
 	smtc_modem_alarm_start_timer(APP_TX_DUTYCYCLE);
-	LOG_INF("Next transmision in: %d s", APP_TX_DUTYCYCLE);
+	LOG_INF("Next transmission in: %d s", APP_TX_DUTYCYCLE);
 
 	/* adr profile MUST be set after successfully joining a network.
 	 * NOTE: if SMTC_MODEM_ADR_PROFILE_CUSTOM is used, the adr_custom_data parameter must be
@@ -162,7 +163,7 @@ static void on_modem_alarm(void)
 
 	/* Schedule next packet transmission */
 	smtc_modem_alarm_start_timer(APP_TX_DUTYCYCLE);
-	LOG_INF("Next transmision in: %d s", APP_TX_DUTYCYCLE);
+	LOG_INF("Next transmission in: %d s", APP_TX_DUTYCYCLE);
 
 	/* Prepare packet */
 	smtc_modem_get_charge(&charge);
@@ -282,7 +283,7 @@ static void context_store(const uint8_t ctx_id, const uint8_t *buffer, const uin
 }
 
 /**
- * @brief Restore context from persistant storage.
+ * @brief Restore context from persistent storage.
  *
  * @param[in] ctx_id The ID of the context to restore.
  * @param[in] buffer The buffer to load the context into.

@@ -143,7 +143,7 @@ static void rp_set_alarm( radio_planner_t* rp, const uint32_t alarm_in_ms );
 static void rp_timer_irq( radio_planner_t* rp );
 
 /**
- * @brief rp_task_call_aborted excute the callback of the aborted tasks
+ * @brief rp_task_call_aborted execute the callback of the aborted tasks
  *
  * @param rp pointer to the radioplaner object itself
  */

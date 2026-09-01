@@ -222,7 +222,7 @@ struct
  */
 
 /*!
- * \brief initialise the session variables
+ * \brief initialize the session variables
  *
  *
  * \param [IN] void
@@ -614,7 +614,7 @@ STATIC int8_t frag_process_data_fragment( uint8_t* buffer, uint8_t buffer_len )
     }
     else
     {
-        // This means that the decoder generated an error, or is ongoing wihout
+        // This means that the decoder generated an error, or is ongoing without
         // any means to reconstruct the original data yet
         switch( rc )
         {
@@ -1381,7 +1381,7 @@ static e_file_error_t check_received_patch( void )
         // But first reset GPIO for correct busy and GPIO restart.
         InitGPIO( );
 
-        // CER-561 avoid eol poping in bootloader, where pmu irq handler is not implemented
+        // CER-561 avoid eol popping in bootloader, where pmu irq handler is not implemented
         // smtc_modem_hal_reset_mcu( );
         memset( ( uint8_t* ) 0x00800000, 0, 16384 );  // Clear the Retention RAM
 

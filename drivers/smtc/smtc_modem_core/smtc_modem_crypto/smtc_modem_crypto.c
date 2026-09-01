@@ -1,7 +1,7 @@
 /*!
  * \file      smtc_modem_crypto.c
  *
- * \brief     Implements crypto funtions needed by modem.
+ * \brief     Implements crypto functions needed by modem.
  *
  * The Clear BSD License
  * Copyright Semtech Corporation 2021. All rights reserved.

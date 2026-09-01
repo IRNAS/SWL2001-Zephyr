@@ -84,7 +84,7 @@ lr11xx_status_t lr11xx_lr_fhss_init( const void* context );
 /*!
  * @brief Configure a payload to be sent with LR_FHSS
  *
- * When calling this method, lr11xx_lr_fhss_set_sync_word is implicitely called to configure the sync word.
+ * When calling this method, lr11xx_lr_fhss_set_sync_word is implicitly called to configure the sync word.
  * Note that the syncword must be 4 bytes long.
  *
  * @param [in] context Chip implementation context

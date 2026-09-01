@@ -21,7 +21,7 @@ struct smtc_modem_hal_cb {
 	 * @brief Get battery level callback
 	 *
 	 * @param [out] value The battery level (in permille (‰) , where 1000 ‰ means full battery).
-	 * The application should set this to the most recent battery level it has avaliable
+	 * The application should set this to the most recent battery level it has available
 	 *
 	 * @return int 0 if the battery level was set, or a negative error code if no valid battery
 	 * level is available
@@ -32,7 +32,7 @@ struct smtc_modem_hal_cb {
 	 * @brief Get temperature callback
 	 *
 	 * @param [out] value The temperature (in deg C). The application should set this to
-	 * the most recent temperature value it has avaliable
+	 * the most recent temperature value it has available
 	 *
 	 * @return int 0 if the temperature was set, or a negative error code if no valid
 	 * temperature is available
@@ -43,7 +43,7 @@ struct smtc_modem_hal_cb {
 	 * @brief Get voltage level callback
 	 *
 	 * @param [out] value The voltage level (in mV). The application should set this to
-	 * the most recent voltage level it has avaliable
+	 * the most recent voltage level it has available
 	 *
 	 * @return int 0 if the voltage level was set, or a negative error code if no valid voltage
 	 * level is available

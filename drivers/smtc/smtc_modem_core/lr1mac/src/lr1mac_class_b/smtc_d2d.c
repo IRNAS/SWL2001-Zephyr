@@ -213,7 +213,7 @@ status_lorawan_t smtc_class_b_d2d_fcnt_down( void* ping_slot_obj_void, uint32_t*
     uint8_t number_ping_per_beacon =
         1 << ( 7 - ping_slot_obj->rx_session_param[ping_slot_obj->rx_session_index]->ping_slot_periodicity );
 
-    // number of ping slot already consummed in this current beacon
+    // number of ping slot already consumed in this current beacon
     uint8_t number_ping_since_begin_of_current_beacon =
         number_ping_per_beacon -
         ping_slot_obj->rx_session_param[ping_slot_obj->rx_session_index]->ping_slot_parameters.ping_number;
@@ -353,7 +353,7 @@ static void class_b_d2d_rp_request( smtc_class_b_d2d_t* class_b_d2d_obj )
                                           ( &lora_param.mod_params ) );
 
     // Enqueue this tx inside , start time is given by the ping slot object itself and
-    // corrected using preambule length
+    // corrected using preamble length
     rp_task_t rp_task = { 0 };
     rp_task.type = RP_TASK_TYPE_CAD_TO_TX;  // in the radioplanner task is a special case in rp, radio config in case of
                                             // negative cad can be launched without enqueued a new rp task
@@ -487,7 +487,7 @@ static uint32_t class_b_d2d_get_fcnt_down( smtc_class_b_d2d_t* class_b_d2d_obj )
     // number of ping slot per beacon period for this multicast group
     uint8_t number_ping_per_beacon = 1 << ( 7 - MULTICAST_OBJ->ping_slot_periodicity );
 
-    // number of ping slot already consummed in this current beacon
+    // number of ping slot already consumed in this current beacon
     uint8_t number_ping_since_begin_of_current_beacon =
         number_ping_per_beacon - MULTICAST_OBJ->ping_slot_parameters.ping_number;
 

@@ -226,7 +226,7 @@ typedef enum modem_suspend_status_e
 typedef enum modem_upload_state_e
 {
     MODEM_UPLOAD_NOT_INIT = 0,     //!< The file upload is not initialized
-    MODEM_UPLOAD_INIT_AND_FILLED,  //!< The file upload is initialized and filled with datas
+    MODEM_UPLOAD_INIT_AND_FILLED,  //!< The file upload is initialized and filled with data
     MODEM_UPLOAD_ON_GOING,         //!< The upload is in progress
     MODEM_UPLOAD_FINISHED          //!< The upload process is finished
 } modem_upload_state_t;

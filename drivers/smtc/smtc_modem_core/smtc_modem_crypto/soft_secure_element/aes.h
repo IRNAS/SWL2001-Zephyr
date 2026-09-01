@@ -121,7 +121,7 @@ return_type aes_cbc_decrypt( const uint8_t *in,
     The encryption subroutines take a key in an array of bytes in
     key[L] where L is 16, 24 or 32 bytes for key lengths of 128,
     192, and 256 bits respectively.  They then encrypts the input
-    data, in[] with this key and put the reult in the output array
+    data, in[] with this key and put the result in the output array
     out[].  In addition, the second key array, o_key[L], is used
     to output the key that is needed by the decryption subroutine
     to reverse the encryption operation.  The two key arrays can

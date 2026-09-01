@@ -122,7 +122,7 @@ void smtc_modem_services_set_dm_upload_sctr( uint32_t ctr );
  *
  * @param [in] radio_ctx Chip implementation context
  * @param [out] buff Pointer to a buffer to be filled with context status information. Must be at least
- * 9 bytes long. It is up to the caller to ensure there is enough place in this buffer. The call is garenteed
+ * 9 bytes long. It is up to the caller to ensure there is enough place in this buffer. The call is guaranteed
  *
  * @returns Operation status
  *

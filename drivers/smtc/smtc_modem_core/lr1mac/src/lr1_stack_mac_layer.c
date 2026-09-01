@@ -499,7 +499,7 @@ void lr1_stack_mac_rx_radio_start( lr1_stack_mac_t* lr1_mac, const rx_win_type_t
         rx_frequency = lr1_mac->rx2_frequency;
         break;
     default:
-        smtc_modem_hal_lr1mac_panic( "RX windows unknow\n" );
+        smtc_modem_hal_lr1mac_panic( "RX windows unknown\n" );
         break;
     }
 
@@ -744,7 +744,7 @@ void lr1_stack_mac_rx_timer_configure( lr1_stack_mac_t* lr1_mac, const rx_win_ty
 
     default:
         is_type_ok = false;
-        smtc_modem_hal_lr1mac_panic( "RX windows unknow\n" );
+        smtc_modem_hal_lr1mac_panic( "RX windows unknown\n" );
         break;
     }
 
@@ -994,7 +994,7 @@ rx_packet_type_t lr1_stack_mac_rx_frame_decode( lr1_stack_mac_t* lr1_mac )
         lr1_mac->no_rx_packet_count_in_mobile_mode = 0;
         lr1_mac->no_rx_packet_count                = 0;
         lr1_mac->tx_fopts_current_length           = 0;  // reset the fopts of the sticky set in payload
-        lr1_mac->tx_fopts_lengthsticky             = 0;  // reset the fopts of the sticky cmd received on a valide frame
+        lr1_mac->tx_fopts_lengthsticky             = 0;  // reset the fopts of the sticky cmd received on a valid frame
                                                          // if received on RX1 or RX2
     }
 
@@ -1386,7 +1386,7 @@ status_lorawan_t lr1_stack_mac_join_accept( lr1_stack_mac_t* lr1_mac )
     lr1_mac->rx1_delay_s   = ( lr1_mac->rx_payload[12] & 0x0F );
     if( lr1_mac->rx1_delay_s == 0 )
     {
-        lr1_mac->rx1_delay_s = 1;  // Lorawan standart define 0 such as a delay of 1
+        lr1_mac->rx1_delay_s = 1;  // Lorawan standard define 0 such as a delay of 1
     }
 
     if( smtc_real_is_rx1_dr_offset_valid( lr1_mac, lr1_mac->rx1_dr_offset ) != OKLORAWAN )
@@ -1643,7 +1643,7 @@ static void link_check_parser( lr1_stack_mac_t* lr1_mac )
 /* LinkADR                                                                                                            */
 /*  Note : describe multiple adr specification                                                                        */
 /*                                                                                                                    */
-/*  Step 1 : Create a "unwrapped channel mask" in case of multiple adr cmd with both Channem Mask and ChannnelMaskCntl*/
+/*  Step 1 : Create a "unwrapped channel mask" in case of multiple adr cmd with both Channem Mask and ChannelMaskCntl*/
 /*       2 : Extract from the last adr cmd datarate candidate                                                         */
 /*       3 : Extract from the last adr cmd TxPower candidate                                                          */
 /*       4 : Extract from the last adr cmd NBRetry candidate                                                          */
@@ -1674,7 +1674,7 @@ static void link_adr_parser( lr1_stack_mac_t* lr1_mac, uint8_t nb_link_adr_req )
                                      lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + ( i * LINK_ADR_REQ_SIZE ) + 3],
                                      lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + ( i * LINK_ADR_REQ_SIZE ) + 4] );
     }
-    uint8_t status_ans = 0x7;  // initialised for ans answer ok
+    uint8_t status_ans = 0x7;  // initialized for ans answer ok
 
     // Check channel mask
     for( uint8_t i = 0; i < nb_link_adr_req; i++ )
@@ -1811,7 +1811,7 @@ static void rx_param_setup_parser( lr1_stack_mac_t* lr1_mac )
         lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 2], lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 3],
         lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 4] );
 
-    uint8_t status_ans = 0x7;  // initialised for ans answer ok
+    uint8_t status_ans = 0x7;  // initialized for ans answer ok
 
     // Valid Rx1DrOffset And Prepare Ans
     uint8_t rx1_dr_offset_temp = ( lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 1] & 0x70 ) >> 4;
@@ -2026,7 +2026,7 @@ static void rx_timing_setup_parser( lr1_stack_mac_t* lr1_mac )
     lr1_mac->rx1_delay_s = ( lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 1] & 0xF );
     if( lr1_mac->rx1_delay_s == 0 )
     {
-        lr1_mac->rx1_delay_s = 1;  // Lorawan standart define 0 such as a delay of 1
+        lr1_mac->rx1_delay_s = 1;  // Lorawan standard define 0 such as a delay of 1
     }
 
     lr1_mac->nwk_payload_index += RXTIMING_SETUP_REQ_SIZE;
@@ -2114,7 +2114,7 @@ static void dl_channel_parser( lr1_stack_mac_t* lr1_mac )
         return;
     }
 
-    uint8_t status_ans = 0x3;  // initialised for ans answer ok
+    uint8_t status_ans = 0x3;  // initialized for ans answer ok
 
     // Valid Channel Index
     uint8_t channel_index_temp = lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 1];
@@ -2275,7 +2275,7 @@ static void ping_slot_channel_req_parser( lr1_stack_mac_t* lr1_mac )
         lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 2], lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 3],
         lr1_mac->nwk_payload[lr1_mac->nwk_payload_index + 4] );
 
-    uint8_t status_ans = 0x3;  // initialised for ans answer ok
+    uint8_t status_ans = 0x3;  // initialized for ans answer ok
 
     // Valid Frequency And Prepare Ans
     uint32_t frequency_temp =

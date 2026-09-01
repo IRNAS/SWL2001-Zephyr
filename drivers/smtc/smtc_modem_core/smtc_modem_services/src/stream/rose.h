@@ -80,7 +80,7 @@ typedef enum
 typedef enum
 {                             // flags:
     ROSE_DROP_OVR    = 0x01,  // alternate strategy to handle overruns
-    ROSE_PEND_SINFO  = 0x02,  // server asked to send info mesage
+    ROSE_PEND_SINFO  = 0x02,  // server asked to send info message
     ROSE_PEND_WLACK  = 0x04,  // waiting for server to ACK WL update
     ROSE_CIPHER_REC  = 0x08,  // encipher records
     ROSE_FIRST_DATA  = 0x10,  // very first data sent

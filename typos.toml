@@ -11,3 +11,5 @@ ser = "ser"
 EXTRAVERSION = "EXTRAVERSION"
 tio = "tio"                   # tool similar to minicom
 cose = "cose" # due to the t_code package in west.yml
+ba = "ba" # byte value in sample modem output
+cpy = "cpy" # established abbreviation for copy in imported modem code

@@ -79,7 +79,7 @@ typedef struct file_upload_s
     uint8_t                    sid;              // Session Id (2bits)
     uint16_t                   average_delay;    // average frame transmission rate/delay
     uint8_t                    port;             // applicative port on which the upload is done
-    file_upload_encrypt_mode_t encrypt_mode;     // file upload encryptio mode
+    file_upload_encrypt_mode_t encrypt_mode;     // file upload encryption mode
     uint8_t                    session_counter;  // session counter
     uint32_t*                  file_buf;         // data buffer
     uint32_t                   file_len;         // file len

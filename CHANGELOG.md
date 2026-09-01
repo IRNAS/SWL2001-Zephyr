@@ -96,7 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
     -   lorawan_asynchronous_fhss
     -   lorawan_multicast_class_b
     -   stream
-    -   tx_rx_continous
+    -   tx_rx_continuous
 
 [Unreleased]: https://github.com/IRNAS/SWL2001-Zephyr/compare/v1.5.0...HEAD
 
