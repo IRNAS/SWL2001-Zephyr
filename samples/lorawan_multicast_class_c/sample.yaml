@@ -1,0 +1,11 @@
+sample:
+  description: Demonstrates multicast downlink reception in LoRaWAN Class C
+  name: LoRaWAN multicast Class C
+common:
+  tags:
+    - quick-build
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan_multicast_class_c: {}

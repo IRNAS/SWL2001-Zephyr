@@ -1,0 +1,11 @@
+sample:
+  description: Demonstrates continuous radio transmission or reception
+  name: Continuous TX and RX
+common:
+  tags:
+    - quick-build
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.tx_rx_continous: {}

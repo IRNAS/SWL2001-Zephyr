@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates button-triggered asynchronous LoRaWAN uplinks
+  name: LoRaWAN asynchronous uplink
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan_asynchronous: {}

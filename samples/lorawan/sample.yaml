@@ -1,0 +1,11 @@
+sample:
+  description: Demonstrates joining a LoRaWAN network and exchanging messages
+  name: LoRaWAN
+common:
+  tags:
+    - quick-build
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan: {}

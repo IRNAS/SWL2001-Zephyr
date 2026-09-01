@@ -1,0 +1,66 @@
+name: "Publish Release"
+
+on:
+  workflow_call:
+    inputs:
+      release_version:
+        required: true
+        type: string
+
+jobs:
+  publish-new-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start
+        run: |
+          version_cut=$(echo "${{ inputs.release_version }}" | cut -c 2-)
+          echo "release_version=${{ inputs.release_version }}" >> $GITHUB_ENV
+          echo "release_version_cut=$version_cut" >> $GITHUB_ENV
+
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.release_version }}
+
+      - name: Get latest Changelog entry
+        id: changelog-reader
+        uses: irnas/irnas-changelog-action@v1.0.0
+        with:
+          operation: extract
+          version: ${{ env.release_version_cut }}
+
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: artifacts
+          path: artifacts
+
+      - name: Read extra release notes
+        run: |
+          # Echoing contents of the below .md files needs to be done in special
+          # manner, as they will usually be multiline strings.
+          # EOF needs to be random value for security reasons
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "pre_changelog<<$EOF" >> $GITHUB_ENV
+          echo "$(cat artifacts/pre_changelog.md)" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+          echo "post_changelog<<$EOF" >> $GITHUB_ENV
+          echo "$(cat artifacts/post_changelog.md)" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+          rm -f artifacts/pre_changelog.md
+          rm -f artifacts/post_changelog.md
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: artifacts/*
+          tag_name: ${{ env.release_version }}
+          body: |
+            # Release notes
+
+            ${{ env.pre_changelog }}
+
+            ${{ steps.changelog-reader.outputs.changes }}
+
+            ${{ env.post_changelog }}

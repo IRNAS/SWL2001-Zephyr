@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates incremental LoRa Edge almanac updates over LoRaWAN
+  name: LoRaWAN almanac update
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.almanac_update: {}

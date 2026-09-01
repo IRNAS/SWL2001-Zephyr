@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates streaming data over LoRaWAN
+  name: LoRaWAN stream
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.stream: {}

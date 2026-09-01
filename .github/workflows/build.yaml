@@ -1,0 +1,128 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      checkout_ref:
+        required: true
+        type: string
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+# Avoid running multiple builds for the same PR or branch at the same time,
+# which can happen when pushing multiple commits in a row.
+# Also, don't apply this for the pushes to the main branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }}
+
+jobs:
+  build:
+    runs-on: self-hosted-systemd
+    container:
+      image: ghcr.io/irnas/ncs-zephyr-v3.4.0-ci:latest
+    defaults:
+      run:
+        shell: bash -leo pipefail {0}
+        # Set work dir to "project" for all 'run' calls. Beware, everything else
+        # (actions, 'with' params, etc.) still needs to reference full path.
+        working-directory: project
+
+    steps:
+      - name: Checkout last PR commit
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: project
+
+      - name: Checkout specified tag
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.checkout_ref }}
+          path: project
+
+      - name: Checkout main
+        if: github.event_name == 'push'
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: project
+
+      - name: Copy .nrfutil folder to HOME
+        run: |
+          # This avoid the bug behavior, where the installed nrfutil commands
+          # (done in the Dockerfile) are not available, due to the GitHub Action
+          # Runner changing the HOME variable.
+          # See this issue for more details:
+          # https://github.com/IRNAS/irnas-docker-software/issues/9
+          cp -r /root/.nrfutil $HOME
+
+      # This is needed due to the later east update (west update) command that
+      # could be cloning from the private repos. The provided token in
+      # GIT_CREDENTIALS needs to be a fine-grained token, with access to all
+      # repositores, with "Read-only" access level to the Content repository
+      # permissions.
+      - name: Set Git credentials
+        run: |
+          git config --global credential.helper '!f() { printf "%s\n" "username=runner" "password=$GIT_CREDENTIALS"; };f'
+
+      - name: Retrieve cache
+        uses: actions/cache@v6
+        env:
+          cache-name: cache-modules
+        with:
+          path: |
+            bootloader
+            modules
+            nrf
+            nrfxlib
+            test
+            tools
+            zephyr
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{
+            hashFiles('project/west.yml') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install project dependencies
+        run: make install-dep
+
+      - name: Setup project
+        run: make project-setup
+
+      - name: Pre-build
+        run: make pre-build
+
+      - name: Quick build
+        if: github.event_name == 'push'
+        run: make quick-build
+
+      - name: Release
+        if: github.event_name == 'workflow_dispatch' || github.event_name ==
+          'pull_request'
+        run: make release
+
+      - name: Pre-package
+        if: github.event_name == 'workflow_dispatch'
+        run: make pre-package
+
+      - name: Package artifacts
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts
+          path: project/artifacts/*
+
+      - name: Post-build clean
+        if: always()
+        # See https://github.com/actions/runner/issues/2058 why
+        # github.workspace doesn't work.
+        run: rm -rf $GITHUB_WORKSPACE/.west
