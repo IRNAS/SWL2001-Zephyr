@@ -1,0 +1,172 @@
+name: Twister
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+  workflow_dispatch:
+
+env:
+  GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }}
+
+# Avoid running multiple builds for the same PR or branch at the same time,
+# which can happen when pushing multiple commits in a row.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  twister-build:
+    name: "Run Unit Tests"
+    runs-on: self-hosted-systemd
+    container:
+      image: ghcr.io/irnas/ncs-zephyr-v3.4.0-ci:latest
+    defaults:
+      run:
+        shell: bash -leo pipefail {0}
+        # Set work dir to "project" for all 'run' calls. Beware, everything else
+        # (actions, 'with' params, etc.) still needs to reference full path.
+        working-directory: project
+
+    steps:
+      - name: Checkout last PR commit
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: project
+
+      - name: Checkout specified tag
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.checkout_ref }}
+          path: project
+
+      - name: Copy .nrfutil folder to HOME
+        run: |
+          # This avoid the bug behavior, where the installed nrfutil commands
+          # (done in the Dockerfile) are not available, due to the GitHub Action
+          # Runner changing the HOME variable.
+          # See this issue for more details:
+          # https://github.com/IRNAS/irnas-docker-software/issues/9
+          cp -r /root/.nrfutil $HOME
+
+      # This is needed due to the later east update (west update) command that
+      # could be cloning from the private repos. The provided token in
+      # GIT_CREDENTIALS needs to be a fine-grained token, with access to all
+      # repositores, with "Read-only" access level to the Content repository
+      # permissions.
+      - name: Set Git credentials
+        run: |
+          git config --global credential.helper '!f() { printf "%s\n" "username=runner" "password=$GIT_CREDENTIALS"; };f'
+
+      - name: Retrieve cache
+        uses: actions/cache@v6
+        env:
+          cache-name: cache-modules
+        with:
+          path: |
+            bootloader
+            modules
+            nrf
+            nrfxlib
+            test
+            tools
+            zephyr
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{
+            hashFiles('project/west.yml') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install dependencies
+        run: make install-dep
+
+      - name: Setup project
+        run: make project-setup
+
+      - name: Run tests
+        run: make test
+
+      - name: Create test report
+        if: always()
+        run: make test-report-ci
+
+      - name: Create coverage report
+        run: |
+          make coverage-report-ci
+          # sed command removes "project/" from the paths in coverage.info,
+          # so that the GitHub action that makes the coverage report can create
+          # proper links to the source files.
+          sed -i 's|project/||g' twister-out/coverage.info
+
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report
+          path: |
+            project/twister-out/twister-report.html
+            project/twister-out/twister.xml
+            project/twister-out/twister.log
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: |
+            project/twister-out/coverage.info
+
+      - name: Post-build clean
+        if: always()
+        # See https://github.com/actions/runner/issues/2058 why
+        # github.workspace doesn't work.
+        run: rm -rf $GITHUB_WORKSPACE/.west
+
+  twister-test-results:
+    name: "Publish Unit Tests Results"
+    runs-on: self-hosted-systemd
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+    needs: twister-build
+    if: always()
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: test-report
+          path: test-report
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2.24.0
+        with:
+          check_name: Unit Test Results
+          files: test-report/twister.xml
+
+  coverage-report:
+    name: "Publish Coverage Report"
+    # NOTE: This action is not compatible with "workflow_dispatch" event, so
+    # it's not possible to run it manually.
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: self-hosted-systemd
+    permissions:
+      issues: write
+      pull-requests: write
+    needs: twister-build
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage-report
+          path: coverage-report
+
+      - name: Publish Coverage Report
+        uses: zgosalvez/github-actions-report-lcov@v7.1.1
+        with:
+          coverage-files: ./coverage-report/coverage.info
+          artifact-name: code-coverage-report
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: off

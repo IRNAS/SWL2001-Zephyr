@@ -1,0 +1,11 @@
+sample:
+  description: Demonstrates LoRaWAN Class B operation and downlink reception
+  name: LoRaWAN Class B
+common:
+  tags:
+    - quick-build
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan_class_b: {}

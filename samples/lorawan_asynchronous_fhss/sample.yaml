@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates button-triggered asynchronous LR-FHSS uplinks over LoRaWAN
+  name: LoRaWAN asynchronous LR-FHSS uplink
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan_asynchronous_fhss: {}

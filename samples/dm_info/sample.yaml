@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates LoRa Cloud Device Management information messages
+  name: LoRaWAN DM info
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.dm_info: {}

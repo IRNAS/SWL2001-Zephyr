@@ -1,0 +1,11 @@
+sample:
+  description: Demonstrates LoRaWAN modem context storage using a custom implementation
+  name: LoRaWAN custom context storage
+common:
+  tags:
+    - quick-build
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.custom_context_storage: {}

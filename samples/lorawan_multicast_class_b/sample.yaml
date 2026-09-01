@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates multicast downlink reception in LoRaWAN Class B
+  name: LoRaWAN multicast Class B
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.lorawan_multicast_class_b: {}

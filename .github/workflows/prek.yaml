@@ -1,0 +1,141 @@
+name: Prek
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  first-commit-check:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false || github.event_name != 'pull_request'
+    outputs:
+      skip_prek: ${{ steps.commit-check.outputs.skip_prek }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Committed tool requires the full history to check commit messages.
+          fetch-depth: 0
+
+      - name: First commit check
+        id: commit-check
+        run: |
+
+          # This step is here only to ensure that after a new repository is created,
+          # the prek.yaml workflow does not immediately fail on the later
+          # Fetch commit refs.
+          first="0000000000000000000000000000000000000000"
+          event_before="${{ github.event.before }}"
+          base_ref="${{ github.base_ref }}"
+
+          if [[ -z "$base_ref" ]]; then
+            first_base_ref=""
+          else
+            first_base_ref="$(git rev-parse origin/$base_ref)"
+          fi
+
+          if [[ ${{ github.event_name }}  == 'push'  ]]; then
+            if [[ $event_before == $first ]]; then
+              echo "This is the first commit in the repository. No commits to check."
+              echo "skip_prek=true" >> $GITHUB_OUTPUT
+            else
+              echo "skip_prek=false" >> $GITHUB_OUTPUT
+            fi
+          elif [[ ${{ github.event_name }}  == 'pull_request' ]]; then
+            if [[ $first_base_ref == $first ]];then
+              echo "This is the first commit in the repository. No commits to check."
+              echo "skip_prek=true" >> $GITHUB_OUTPUT
+            else
+              echo "skip_prek=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "skip_prek=false" >> $GITHUB_OUTPUT
+          fi
+
+  prek-check:
+    needs: first-commit-check
+    if: needs.first-commit-check.outputs.skip_prek == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Committed tool requires the full history to check commit messages.
+          fetch-depth: 0
+
+      - name: Generate commit refs for push to main branch
+        if: github.event_name == 'push'
+        run: |
+          echo "from_ref=${{ github.event.before }}" >> $GITHUB_ENV
+          echo "to_ref=${{ github.event.after }}" >> $GITHUB_ENV
+
+      - name: Generate commit refs for push to PR
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "from_ref=$(git rev-parse origin/${{ github.base_ref }})" >> $GITHUB_ENV
+          echo "to_ref=$(git rev-parse origin/${{ github.head_ref }})" >> $GITHUB_ENV
+
+      - name: Fetch commit refs
+        run: |
+          git fetch origin ${{ env.from_ref }}
+          git fetch origin ${{ env.to_ref }}
+
+      - name: Restore prek environment from cache
+        id: cache-prek
+        uses: actions/cache@v6
+        with:
+          # ~/_work/_tool is needed for the setup-python action to cache the
+          # installed Python versions. Otherwise every run would need to install
+          # Python from github, which cause us to hit the API rate limit at
+          # some point.
+          path: |
+            ~/.cache/prek
+            ~/.local/bin/prek
+            committed
+
+          key: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.prek-config.yaml') }}
+
+      - name: Install prek dependencies
+        if: steps.cache-prek.outputs.cache-hit != 'true'
+        run: |
+          wget https://github.com/j178/prek/releases/download/v0.4.12/prek-installer.sh
+          sh prek-installer.sh
+          ~/.local/bin/prek install-hooks
+
+          wget -q https://github.com/crate-ci/committed/releases/download/v1.1.11/committed-v1.1.11-x86_64-unknown-linux-musl.tar.gz
+          mkdir committed
+          tar -xf committed-v1.1.11-x86_64-unknown-linux-musl.tar.gz --directory committed
+
+      - name: Run prek
+        run: |
+          echo "Commits being checked:"
+          git log --oneline --no-decorate ${{ env.from_ref }}..${{ env.to_ref }}
+          echo ""
+
+          if ! ~/.local/bin/prek run --from-ref ${{ env.from_ref }} --to-ref ${{ env.to_ref }} --show-diff-on-failure; then
+            echo "::error:: If you don't have prek installed, please see https://code.bbraun.io/dp-gravityplus/guidelines-docs/tree/main/tools/prek for instructions."
+            echo "::error:: It looks like the code was committed without passing all prek checks. Check the 'Run prek' step above for more information."
+            exit 1
+          fi
+
+      # Although committed is already setup as a prek hook,
+      # prek is not able to run it on a range of commit
+      # messages, so we need to run it manually.
+      - name: Run committed tool
+        run: |
+          echo "Commits being checked:"
+          git log --oneline --no-decorate ${{ env.from_ref }}..${{ env.to_ref }}
+          echo ""
+
+          if ! ./committed/committed ${{ env.from_ref }}..${{ env.to_ref }} --no-merge-commit --no-wip --no-fixup ; then
+            echo "::error:: If you don't have prek installed, please see https://github.com/IRNAS/irnas-guidelines-docs/tree/main/tools/pre-commit for instructions."
+            echo "::error:: It looks like the code was committed without passing commit message check. Check the 'Run committed tool' step for more information."
+            exit 1
+          fi

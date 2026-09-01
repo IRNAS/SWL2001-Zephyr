@@ -1,0 +1,104 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        stages: [pre-commit]
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+        stages: [pre-commit]
+      - id: check-yaml
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        stages: [pre-commit]
+      - id: check-executables-have-shebangs
+        stages: [pre-commit]
+      - id: check-shebang-scripts-are-executable
+        stages: [pre-commit]
+      - id: mixed-line-ending
+        stages: [pre-commit]
+      - id: detect-private-key
+        stages: [pre-commit]
+      - id: check-added-large-files
+        stages: [pre-commit]
+    # clang-format uses .clang-format to apply formatting
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v22.1.5
+    hooks:
+      - id: clang-format
+        stages: [pre-commit]
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+      - id: cmake-format
+        additional_dependencies: [pyyaml>=5.1]
+      - id: cmake-lint
+        additional_dependencies: [pyyaml>=5.1]
+        stages: [pre-commit]
+    # typos uses typos.toml to find and fix typos
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.48.0
+    hooks:
+      - id: typos
+        stages: [pre-commit]
+      - id: typos
+        name: commit-msg-typos
+        stages: [commit-msg]
+        args: [--config, typos-commit-msg.toml]
+    # committed uses committed.toml to validate commit messages
+  - repo: https://github.com/crate-ci/committed
+    rev: v1.1.11
+    hooks:
+      - id: committed
+        stages: [commit-msg]
+  - repo: https://github.com/sirosen/check-jsonschema
+    rev: 0.37.4
+    hooks:
+      - id: check-github-workflows
+        stages: [pre-commit]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        stages: [pre-commit]
+        args: [-x, --source-path=SCRIPTDIR]
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+      - id: shfmt
+        stages: [pre-commit]
+        args: [--indent=4, --simplify, --write]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.20
+    hooks:
+      - id: ruff
+        args: [--fix]
+        stages: [pre-commit]
+      - id: ruff-format
+        stages: [pre-commit]
+    # prettier uses .prettierrc to format files
+  - repo: http://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        exclude: CHANGELOG.md
+        types_or: [markdown]
+        stages: [pre-commit]
+    # markdownlint-cli uses .markdownlint.yaml to lint markdown files
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.49.0
+    hooks:
+      - id: markdownlint
+        exclude: CHANGELOG.md
+        args: [--fix]
+        stages: [pre-commit]
+        language_version: 24.13.1
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_language_version:
+  python: python3.12
+# Don't run pre-commit hooks on any of the patch, .svg or .tff files, we want
+# them unchanged.
+exclude: '.*\.patch|.*\.svg|.*\.tff'

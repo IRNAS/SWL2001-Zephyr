@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates uploading a large file over LoRaWAN
+  name: LoRaWAN large file upload
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.large_file_upload: {}

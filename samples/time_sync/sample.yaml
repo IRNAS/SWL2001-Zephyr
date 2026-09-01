@@ -1,0 +1,10 @@
+sample:
+  description: Demonstrates synchronizing device time over LoRaWAN
+  name: LoRaWAN time synchronization
+common:
+  tags:
+    - release
+  platform_allow:
+    - nrf52840dk_nrf52840
+tests:
+  sample.time_sync: {}
