@@ -85,7 +85,7 @@ almanac_update_return_code_t almanac_update_create_uplink_payload( const void* l
         return ALMANAC_ERROR;
     }
 
-    // Do not take hte first byte from the lr11xx response
+    // Do not take the first byte from the lr11xx response
     memcpy( payload, &local_buff[1], SERVICE_LR11XX_GNSS_CONTEXT_STATUS_LENGTH - 1 );
 
     return ALMANAC_OK;

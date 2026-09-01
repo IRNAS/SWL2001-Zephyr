@@ -465,7 +465,7 @@ dm_rc_t dm_parse_cmd( dm_cmd_msg_t* cmd_input )
             modem_supervisor_add_task_alm_dbg_ans( 1 );
         }
 #elif defined( LR11XX_TRANSCEIVER ) && defined( ENABLE_MODEM_GNSS_FEATURE )
-        // Not supported on Basic Modem with LR11XX tranceiver
+        // Not supported on Basic Modem with LR11XX transceiver
         ret = DM_ERROR;
 #endif
         ret = DM_ERROR;

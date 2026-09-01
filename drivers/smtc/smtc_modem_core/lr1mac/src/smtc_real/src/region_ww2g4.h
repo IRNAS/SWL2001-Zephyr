@@ -72,7 +72,7 @@ extern "C" {
  */
 
 /**
- * @brief Congigure the region with default value and pointers
+ * @brief Configure the region with default value and pointers
  *
  * @param lr1_mac
  */

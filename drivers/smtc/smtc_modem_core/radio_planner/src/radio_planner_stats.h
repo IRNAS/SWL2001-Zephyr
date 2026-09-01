@@ -46,9 +46,9 @@ extern "C" {
 #include <stdint.h>   // C99 types
 #include <stdbool.h>  // bool type
 
-#if defined( RP_STAT_PRINT_ENBALE )
+#if defined( RP_STAT_PRINT_ENABLE )
 #include "smtc_modem_hal_dbg_trace.h"
-#endif  // RP_STAT_PRINT_ENBALE
+#endif  // RP_STAT_PRINT_ENABLE
 
 #include <string.h>  // for memset
 
@@ -197,7 +197,7 @@ static inline void rp_stats_sniff_update( rp_stats_t* rp_stats, uint32_t timesta
     rp_stats->none_timestamp = 0;
 }
 
-#if defined( RP_STAT_PRINT_ENBALE )
+#if defined( RP_STAT_PRINT_ENABLE )
 /*!
  *
  */
@@ -235,7 +235,7 @@ static inline void rp_stats_print( rp_stats_t* rp_stats )
     }
     SMTC_MODEM_HAL_RP_TRACE_PRINTF( "RP: number of errors is %lu\n\n\n", rp_stats->rp_error );
 }
-#endif  // RP_STAT_PRINT_ENBALE
+#endif  // RP_STAT_PRINT_ENABLE
 
 #ifdef __cplusplus
 }

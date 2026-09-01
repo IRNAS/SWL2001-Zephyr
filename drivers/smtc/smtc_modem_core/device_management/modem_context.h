@@ -60,7 +60,7 @@ extern "C" {
 #define DEFAULT_DM_REPORTING_INTERVAL 0x81  // 1h
 #define DEFAULT_DM_REPORTING_FIELDS 0x7B    // status, charge, temp, signal, uptime, rxtime
 #define DEFAULT_DM_MUTE_DAY 0
-#define DEFAULT_ADR_MOBILE_MODE_TIMEOUT 0  // desactivated by default
+#define DEFAULT_ADR_MOBILE_MODE_TIMEOUT 0  // deactivated by default
 
 #define UPLOAD_SID 0
 

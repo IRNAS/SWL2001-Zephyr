@@ -93,7 +93,7 @@ void smtc_lbt_init( smtc_lbt_t* lbt_obj, radio_planner_t* rp, uint8_t lbt_id_rp,
  * @param [in] lbt_obj pointer to lbt_obj itself
  * @param [in] listen_duration_ms duration of the listen task
  * @param [in] threshold_dbm threshold in dbm to decide if the channel is free or busy
- * @param [in] bw_hz bandwith in hertz to listen a channel
+ * @param [in] bw_hz bandwidth in hertz to listen a channel
  */
 void smtc_lbt_set_parameters( smtc_lbt_t* lbt_obj, uint32_t listen_duration_ms, int16_t threshold_dbm, uint32_t bw_hz );
 
@@ -103,7 +103,7 @@ void smtc_lbt_set_parameters( smtc_lbt_t* lbt_obj, uint32_t listen_duration_ms, 
  * @param [in]  lbt_obj pointer to lbt_obj itself
  * @param [out] listen_duration_ms duration of the listen task
  * @param [out] threshold_dbm threshold in dbm
- * @param [out] bw_hz  bandwith in hertz
+ * @param [out] bw_hz  bandwidth in hertz
  */
 void smtc_lbt_get_parameters( smtc_lbt_t* lbt_obj, uint32_t* listen_duration_ms, int16_t* threshold_dbm,
                               uint32_t* bw_hz );

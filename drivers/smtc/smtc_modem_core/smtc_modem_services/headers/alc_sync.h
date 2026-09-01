@@ -207,7 +207,7 @@ uint32_t alc_sync_get_gps_time_second( alc_sync_ctx_t* ctx );
 
 /**
  * @brief Get ALC Sync time left in second before connection lost
- * @remark return 0 when no synchonisation
+ * @remark return 0 when no synchronization
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @return uint32_t time
@@ -215,7 +215,7 @@ uint32_t alc_sync_get_gps_time_second( alc_sync_ctx_t* ctx );
 uint32_t alc_sync_get_time_left_connection_lost( alc_sync_ctx_t* ctx );
 
 /**
- * @brief Get ALC Sync status (synchronisation done or not)
+ * @brief Get ALC Sync status (synchronization done or not)
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @return bool sync_done status
@@ -223,7 +223,7 @@ uint32_t alc_sync_get_time_left_connection_lost( alc_sync_ctx_t* ctx );
 bool is_alc_sync_done( alc_sync_ctx_t* ctx );
 
 /**
- * @brief Get ALC Sync time validation (synchronisation done or not)
+ * @brief Get ALC Sync time validation (synchronization done or not)
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @return bool sync_done status
@@ -231,7 +231,7 @@ bool is_alc_sync_done( alc_sync_ctx_t* ctx );
 bool is_alc_sync_time_valid( alc_sync_ctx_t* ctx );
 
 /**
- * @brief Set the delays in second before concider that the time is no more sync
+ * @brief Set the delays in second before consider that the time is no more sync
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @param [in] delay_s
@@ -241,7 +241,7 @@ bool is_alc_sync_time_valid( alc_sync_ctx_t* ctx );
 bool alc_sync_set_valid_delay_second( alc_sync_ctx_t* ctx, uint32_t delay_s );
 
 /**
- * @brief Get the delays in second before concider that the time is no more sync
+ * @brief Get the delays in second before consider that the time is no more sync
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @return uint32_t
@@ -249,7 +249,7 @@ bool alc_sync_set_valid_delay_second( alc_sync_ctx_t* ctx, uint32_t delay_s );
 uint32_t alc_sync_get_valid_delay_second( alc_sync_ctx_t* ctx );
 
 /**
- * @brief Set ALC Sync in synchronisation lost status
+ * @brief Set ALC Sync in synchronization lost status
  *
  * @param [in] alc_sync_ctx_t *ctx      Clock sync pointer context
  * @return void

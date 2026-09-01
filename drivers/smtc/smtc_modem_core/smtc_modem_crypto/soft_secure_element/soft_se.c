@@ -305,7 +305,7 @@ typedef struct soft_se_data_s
 } soft_se_data_t;
 
 /**
- * @brief Struture for soft secure element context saving in NVM
+ * @brief Structure for soft secure element context saving in NVM
  *
  * @struct soft_se_context_nvm_t
  */

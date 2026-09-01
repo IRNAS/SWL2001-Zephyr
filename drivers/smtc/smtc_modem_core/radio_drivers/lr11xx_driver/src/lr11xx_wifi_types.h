@@ -350,7 +350,7 @@ typedef struct
     uint16_t beacon_period_tu;
     uint16_t seq_control;                                 //!< Sequence Control value
     uint8_t  ssid_bytes[LR11XX_WIFI_RESULT_SSID_LENGTH];  //!< Service Set
-                                                          //!< IDentifier
+                                                          //!< IIdentifier
     lr11xx_wifi_channel_t          current_channel;       //!< Current channel indicated in the Wi-Fi frame
     lr11xx_wifi_country_code_str_t country_code;          //!< Country Code
     uint8_t                        io_regulation;         //!< Input Output Regulation

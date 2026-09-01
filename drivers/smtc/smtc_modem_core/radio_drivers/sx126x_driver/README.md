@@ -1,7 +1,7 @@
 # SX126X driver
 
-This package proposes an implementation in C of the driver for **SX126X** radio component.
-Please see the [changelog](CHANGELOG.md) for more information.
+This package proposes an implementation in C of the driver for **SX126X** radio component. Please
+see the [changelog](CHANGELOG.md) for more information.
 
 ## Structure
 
@@ -19,7 +19,8 @@ The driver is defined as follows:
 
 ## HAL
 
-The HAL (Hardware Abstraction Layer) is a collection of functions the user shall implement to write platform-dependant calls to the host. The list of functions is the following:
+The HAL (Hardware Abstraction Layer) is a collection of functions the user shall implement to write
+platform-dependent calls to the host. The list of functions is the following:
 
 - sx126x_hal_reset
 - sx126x_hal_wakeup

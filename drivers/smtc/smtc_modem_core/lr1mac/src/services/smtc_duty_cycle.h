@@ -57,7 +57,7 @@ extern "C" {
  */
 // clang-format off
 #define SMTC_DTC_BANDS_MAX          ( 6 )                      // Number of ETSI band supported by this algo
-#define SMTC_DTC_PERIOD_MS          ( 3600000UL )              // Number of miliseconds in one period (3600000 for period 1h)
+#define SMTC_DTC_PERIOD_MS          ( 3600000UL )              // Number of milliseconds in one period (3600000 for period 1h)
 #define SMTC_DTC_SECONDS_BY_UNIT    ( 120 )                    // Sum TOA by step of N seconds, MIN VALUE IS 60s to avoid division by 0
 #define SMTC_DTC_TOA_BUFF_SIZE      ( ( SMTC_DTC_PERIOD_MS / 1000UL ) / SMTC_DTC_SECONDS_BY_UNIT )  // Buffer size to sum all TOA over one period
 
@@ -68,7 +68,7 @@ extern "C" {
 #endif
 
 //
-// Represention of the current configuration
+// Representation of the current configuration
 //
 // index                       0     1     2                  28    29   0
 // 16bits array to save TOA {[    ][    ][    ][    ...    ][    ][    ][    ]}
@@ -228,7 +228,7 @@ bool smtc_duty_cycle_is_band_free( smtc_dtc_t* dtc_obj, uint8_t band );
  * @param dtc_obj                   Contains the duty cycle context
  * @param number_of_tx_freq         number of tx freq in list
  * @param tx_freq_list              tx frequency list used by the app to check only duty cycle in these bands
- * @return int32_t                  milliseconds, if > 0: the next slot availble, else the available time
+ * @return int32_t                  milliseconds, if > 0: the next slot available, else the available time
  */
 int32_t smtc_duty_cycle_get_next_free_time_ms( smtc_dtc_t* dtc_obj, uint8_t number_of_tx_freq, uint32_t* tx_freq_list );
 #ifdef __cplusplus

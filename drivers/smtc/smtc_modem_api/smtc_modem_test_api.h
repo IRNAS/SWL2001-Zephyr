@@ -82,7 +82,7 @@ typedef enum smtc_modem_test_sf_e
 } smtc_modem_test_sf_t;
 
 /**
- * @brief Test mode Bandwith type
+ * @brief Test mode Bandwidth type
  */
 typedef enum smtc_modem_test_bw_e
 {
@@ -97,7 +97,7 @@ typedef enum smtc_modem_test_bw_e
 } smtc_modem_test_bw_t;
 
 /**
- * @brief Test mode Bandwith type (high bandwidth)
+ * @brief Test mode Bandwidth type (high bandwidth)
  */
 typedef enum smtc_modem_test_bw_m_e
 {
@@ -161,7 +161,7 @@ smtc_modem_return_code_t smtc_modem_test_nop( void );
  * @param [in] frequency_hz    Frequency in Hz
  * @param [in] tx_power_dbm    Power in dbm
  * @param [in] sf              Spreading factor following smtc_modem_test_sf_t definition
- * @param [in] bw              Bandwith following smtc_modem_test_bw_t definition
+ * @param [in] bw              Bandwidth following smtc_modem_test_bw_t definition
  * @param [in] cr              Coding rate following smtc_modem_test_cr_t definition
  * @param [in] preamble_size   Size of the preamble
  * @param [in] continuous_tx   false: single transmission / true: continuous transmission
@@ -189,7 +189,7 @@ smtc_modem_return_code_t smtc_modem_test_tx_cw( uint32_t frequency_hz, int8_t tx
  *
  * @param [in] frequency_hz  Frequency in Hz
  * @param [in] sf            Spreading factor following smtc_modem_test_sf_t definition
- * @param [in] bw            Bandwith following smtc_modem_test_bw_t definition
+ * @param [in] bw            Bandwidth following smtc_modem_test_bw_t definition
  * @param [in] cr            Coding rate following smtc_modem_test_cr_t definition
  *
  * @return Modem return code as defined in @ref smtc_modem_return_code_t

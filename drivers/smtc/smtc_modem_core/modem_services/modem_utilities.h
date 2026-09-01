@@ -49,7 +49,7 @@ extern "C" {
 #include "lr1mac_defs.h"
 
 #if defined( LR1110_MODEM_E )
-#define START_FLASH_ADRESS ( uint32_t )( BASE_ADDR )
+#define START_FLASH_ADDRESS ( uint32_t )( BASE_ADDR )
 #define FLASH_PROG_LEN ( uint32_t )( BASE_ADDR + 0xF4 )  // Address where is located the prog len
 #endif                                                   // LR1110_MODEM_E
 

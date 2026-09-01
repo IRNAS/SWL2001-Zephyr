@@ -477,7 +477,7 @@ lr11xx_status_t lr11xx_wifi_cfg_timestamp_ap_phone( const void* context, uint32_
 lr11xx_status_t lr11xx_wifi_read_version( const void* context, lr11xx_wifi_version_t* wifi_version );
 
 /*!
- * @brief Retreive channel information from channel info byte
+ * @brief Retrieve channel information from channel info byte
  *
  * This method is to be called with on the WiFi channel info byte of a scan result.
  *
@@ -504,7 +504,7 @@ void lr11xx_wifi_parse_channel_info( const lr11xx_wifi_channel_info_byte_t chann
 /*!
  * @brief Helper method to retrieve channel from channel info byte
  *
- * @param [in] channel_info The chanel info byte from passive scan result
+ * @param [in] channel_info The channel info byte from passive scan result
  *
  * @returns The channel of scanned MAC address
  *

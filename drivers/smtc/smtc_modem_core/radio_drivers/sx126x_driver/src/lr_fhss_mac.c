@@ -478,7 +478,7 @@ uint16_t lr_fhss_build_frame( const lr_fhss_v1_params_t* params, uint16_t hop_se
     data_out[data_in_bytecount + 1] = payload_crc & 0xFF;
     data_out[data_in_bytecount + 2] = 0;
 
-    // the 1/3 encoded bytes can go up to LR_FHSS_MAX_TMP_BUF_BYTES temporarly, before puncturing it
+    // the 1/3 encoded bytes can go up to LR_FHSS_MAX_TMP_BUF_BYTES temporarily, before puncturing it
     uint16_t nb_bits =
         lr_fhss_convolution_encode_viterbi_1_3( data_out, 8 * ( data_in_bytecount + 2 ) + 6, data_out_tmp );
 

@@ -8,4 +8,4 @@ common:
   platform_allow:
     - nrf52840dk_nrf52840
 tests:
-  sample.tx_rx_continous: {}
+  sample.tx_rx_continuous: {}

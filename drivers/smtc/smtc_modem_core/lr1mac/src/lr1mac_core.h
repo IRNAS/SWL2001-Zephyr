@@ -50,7 +50,7 @@
  */
 
 /**
- * @brief LoRaWAN stack initialisation
+ * @brief LoRaWAN stack initialization
  *
  * @param lr1_mac_obj             // lr1mac object
  * @param real                    // Regional Abstraction Layer object
@@ -206,7 +206,7 @@ lr1mac_activation_mode_t lr1mac_core_get_activation_mode( lr1_stack_mac_t* lr1_m
 /**
  * @brief Return the Max payload length allowed for the next transmit
  *
- * @remark  DataRate + FOPTS + region  dependant
+ * @remark  DataRate + FOPTS + region  dependent
  * @remark  In any case if user sent a too long payload, the send method will answer by an error status
  *
  * @param lr1_mac_obj
@@ -381,7 +381,7 @@ uint32_t lr1mac_core_next_join_time_second_get( lr1_stack_mac_t* lr1_mac_obj );
 /**
  * @brief Get the next free time for the duty cycle
  *
- * @remark  if > 0: the next slot availble, else the available time
+ * @remark  if > 0: the next slot available, else the available time
  *
  * @param lr1_mac_obj
  * @return int32_t
@@ -465,7 +465,7 @@ uint16_t lr1mac_core_get_current_adr_ack_cnt( lr1_stack_mac_t* lr1_mac_obj );
 uint16_t lr1mac_core_get_current_no_rx_packet_in_mobile_mode( lr1_stack_mac_t* lr1_mac_obj );
 
 /**
- * @brief Reset the number of consecutive uplink packet without downlink to concider the stack out of range in mobile
+ * @brief Reset the number of consecutive uplink packet without downlink to consider the stack out of range in mobile
  * mode
  *
  * @param lr1_mac_obj
@@ -549,7 +549,7 @@ bool lr1mac_core_is_time_valid( lr1_stack_mac_t* lr1_mac_obj );
 uint32_t lr1mac_core_get_timestamp_last_device_time_ans_s( lr1_stack_mac_t* lr1_mac_obj );
 
 /**
- * @brief Get the left delais before to concider device time no more valid
+ * @brief Get the left delays before to consider device time no more valid
  *
  * @param lr1_mac_obj
  * @return uint32_t
@@ -567,7 +567,7 @@ void lr1mac_core_set_device_time_callback( lr1_stack_mac_t* lr1_mac_obj,
                                            void* context, uint32_t rx_timestamp_s );
 
 /**
- * @brief Set delay in seconds to concider time no more valid if no time sync received
+ * @brief Set delay in seconds to consider time no more valid if no time sync received
  *
  * @param lr1_mac_obj
  * @param delay_s
@@ -576,7 +576,7 @@ void lr1mac_core_set_device_time_callback( lr1_stack_mac_t* lr1_mac_obj,
 status_lorawan_t lr1_mac_core_set_device_time_invalid_delay_s( lr1_stack_mac_t* lr1_mac_obj, uint32_t delay_s );
 
 /**
- * @brief Get delay in seconds to concider time no more valid if no time sync received
+ * @brief Get delay in seconds to consider time no more valid if no time sync received
  *
  * @param lr1_mac_obj
  * @return uint32_t

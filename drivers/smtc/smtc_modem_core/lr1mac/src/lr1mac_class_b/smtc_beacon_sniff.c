@@ -81,7 +81,7 @@ static uint8_t get_beacon_sf( lr1_stack_mac_t* lr1_mac, uint8_t beacon_datarate 
  *
  * @param [in] lr1_mac* pointer to lr1mac stack object
  * @param [in] beacon_datarate  beacon data rate
- * @return return the beacon bandwith
+ * @return return the beacon bandwidth
  */
 static lr1mac_bandwidth_t get_beacon_bw( lr1_stack_mac_t* lr1_mac, uint8_t beacon_datarate );
 
@@ -135,7 +135,7 @@ static void update_beacon_state( smtc_lr1_beacon_t* lr1_beacon_obj );
 static void beacon_debug_print( smtc_lr1_beacon_t* lr1_beacon_obj );
 
 /**
- * @brief update the length in symboles of the duration of the rx beacon window
+ * @brief update the length in symbols of the duration of the rx beacon window
  *
  * @param [in,out] lr1_beacon_obj Beacon object
  * @param [in] target_time target time of the next beacon
@@ -184,7 +184,7 @@ static bool is_valid_beacon( smtc_lr1_beacon_t* lr1_beacon_obj, uint32_t timesta
 #define GET_BEACON_SF( ) \
     ( ral_lora_sf_t ) get_beacon_sf( lr1_beacon_obj->lr1_mac, smtc_real_get_beacon_dr( lr1_beacon_obj->lr1_mac ) )
 /**
- * @brief Compute the beacon bandwith
+ * @brief Compute the beacon bandwidth
  */
 #define GET_BEACON_BW( ) \
     ( ral_lora_bw_t ) get_beacon_bw( lr1_beacon_obj->lr1_mac, smtc_real_get_beacon_dr( lr1_beacon_obj->lr1_mac ) )
@@ -204,12 +204,12 @@ static bool is_valid_beacon( smtc_lr1_beacon_t* lr1_beacon_obj, uint32_t timesta
  */
 #define MAX_BEACON_WINDOW_SYMB( ) MIN( MAX_BEACON_WINDOW_MS / BEACON_SYMB_DURATION_MS( ), 255 )
 /**
- * @brief return the duration in ms of a beacon duration initally defined in number of symbols
+ * @brief return the duration in ms of a beacon duration initially defined in number of symbols
  */
 #define TIME_MS_TO_BEACON_SYMB( N ) \
     ( MIN( MAX( ( N / BEACON_SYMB_DURATION_MS( ) ), MIN_BEACON_WINDOW_SYMB ), MAX_BEACON_WINDOW_SYMB( ) ) )
 /**
- * @brief compute the dpll phase with a resultion of 1ms
+ * @brief compute the dpll phase with a resolution of 1ms
  */
 #define DPLL_PHASE_MS( ) lr1_beacon_obj->dpll_phase_100us / 10
 
@@ -447,7 +447,7 @@ void smtc_beacon_sniff_get_metadata( smtc_lr1_beacon_t* lr1_beacon_obj, smtc_bea
 uint32_t smtc_decode_beacon_epoch_time( uint8_t* beacon_payload, uint8_t beacon_sf )
 {
     // the format of the beacon payload is different according to the beacon sf. The following formula is a way to
-    // abstact the RFU bytes position with a very simple way.
+    // abstract the RFU bytes position with a very simple way.
     uint16_t frame_crc    = beacon_payload[beacon_sf - 3] + ( beacon_payload[beacon_sf - 2] << 8 );
     uint16_t computed_crc = crc16_beacon( beacon_payload, beacon_sf - 3 );
     if( computed_crc != frame_crc )

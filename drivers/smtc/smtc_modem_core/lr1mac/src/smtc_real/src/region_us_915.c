@@ -386,7 +386,7 @@ status_lorawan_t region_us_915_get_next_channel( lr1_stack_mac_t* lr1_mac )
         region_us_915_init_after_join_snapshot_channel_mask( lr1_mac );
     }
 
-    // Seach all active channels and put in array to be randomly select
+    // Search all active channels and put them in an array for random selection
     uint8_t active_channel_nb = 0;
     uint8_t active_channel_index[NUMBER_OF_TX_CHANNEL_US_915];
     for( uint8_t i = 0; i < NUMBER_OF_TX_CHANNEL_US_915; i++ )

@@ -66,17 +66,20 @@ static char *prv_string_trim(char *text)
 	char *end;
 
 	/* Trim leading space */
-	while (isspace((unsigned char)*text))
+	while (isspace((unsigned char)*text)) {
 		text++;
+	}
 
 	/* All spaces? */
-	if (*text == 0)
+	if (*text == 0) {
 		return text;
+	}
 
 	/* Trim trailing space */
 	end = text + strlen(text) - 1;
-	while (end > text && isspace((unsigned char)*end))
+	while (end > text && isspace((unsigned char)*end)) {
 		end--;
+	}
 
 	/* Write new null terminator character */
 	end[1] = '\0';

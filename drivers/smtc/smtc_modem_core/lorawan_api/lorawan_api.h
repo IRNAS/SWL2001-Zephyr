@@ -254,7 +254,7 @@ void lorawan_api_set_activation_mode( lr1mac_activation_mode_t activation_mode )
 
 /**
  * @brief Return the Max payload length allowed for the next transmit
- * @remark  DataRate + FOPTS + region  dependant ( )
+ * @remark  DataRate + FOPTS + region  dependent ( )
  * @remark  In any case if user set a too long payload, the send method will answer by an error status
  *
  * @return uint32_t The max payload allowed
@@ -837,7 +837,7 @@ bool lorawan_api_is_time_valid( void );
 uint32_t lorawan_api_get_timestamp_last_device_time_ans_s( void );
 
 /**
- * @brief Get the left delais before to concider device time no more valid
+ * @brief Get the left delays before to consider device time no more valid
  *
  * @return uint32_t
  */
@@ -854,7 +854,7 @@ void lorawan_api_set_device_time_callback( void ( *device_time_callback )( void*
                                            void* context, uint32_t rx_timestamp_s );
 
 /**
- * @brief Set delay in seconds to concider time no more valid if no time sync received
+ * @brief Set delay in seconds to consider time no more valid if no time sync received
  *
  * @param [in] delay_s
  * @return status_lorawan_t The status of the operation
@@ -862,7 +862,7 @@ void lorawan_api_set_device_time_callback( void ( *device_time_callback )( void*
 status_lorawan_t lorawan_api_set_device_time_invalid_delay_s( uint32_t delay_s );
 
 /**
- * @brief Get delay in seconds to concider time no more valid if no time sync received
+ * @brief Get delay in seconds to consider time no more valid if no time sync received
  *
  * @return uint32_t
  */
@@ -889,7 +889,7 @@ status_lorawan_t lorawan_api_get_device_time_req_status( void );
  *
  * @param [in] listen_duration_ms   duration of the listen task
  * @param [in] threshold_dbm        threshold in dbm to decide if the channel is free or busy
- * @param [in] bw_hz                bandwith in hertz to listen a channel
+ * @param [in] bw_hz                bandwidth in hertz to listen a channel
  */
 void lorawan_api_lbt_set_parameters( uint32_t listen_duration_ms, int16_t threshold_dbm, uint32_t bw_hz );
 
@@ -898,7 +898,7 @@ void lorawan_api_lbt_set_parameters( uint32_t listen_duration_ms, int16_t thresh
  *
  * @param [out] listen_duration_ms  duration of the listen task
  * @param [out] threshold_dbm       threshold in dbm
- * @param [out] bw_hz               bandwith in hertz
+ * @param [out] bw_hz               bandwidth in hertz
  */
 void lorawan_api_lbt_get_parameters( uint32_t* listen_duration_ms, int16_t* threshold_dbm, uint32_t* bw_hz );
 
@@ -976,7 +976,7 @@ bool lorawan_api_get_class_b_status( void );
  *
  * @param [in]  in_dr  Datarate
  * @param [out] out_sf Corresponding SF
- * @param [out] out_bw Corresponding bandwith
+ * @param [out] out_bw Corresponding bandwidth
  */
 void lorawan_api_lora_dr_to_sf_bw( uint8_t in_dr, uint8_t* out_sf, lr1mac_bandwidth_t* out_bw );
 
@@ -1020,7 +1020,7 @@ status_lorawan_t lorawan_api_set_adr_ack_limit_delay( uint8_t adr_ack_limit, uin
 void lorawan_api_get_adr_ack_limit_delay( uint8_t* adr_ack_limit, uint8_t* adr_ack_delay );
 
 /**
- * @brief Device To Device Reques Tx
+ * @brief Device To Device Request Tx
  *
  * @param [in] multi_cast_group_id  The multicast group identifier
  * @param [in] fport                The LoRaWAN FPort on which the uplink is done

@@ -83,7 +83,7 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        exclude: CHANGELOG.md
+        exclude: CHANGELOG.md|license.md
         types_or: [markdown]
         stages: [pre-commit]
     # markdownlint-cli uses .markdownlint.yaml to lint markdown files
@@ -91,7 +91,7 @@ repos:
     rev: v0.49.0
     hooks:
       - id: markdownlint
-        exclude: CHANGELOG.md
+        exclude: CHANGELOG.md|license.md
         args: [--fix]
         stages: [pre-commit]
         language_version: 24.13.1

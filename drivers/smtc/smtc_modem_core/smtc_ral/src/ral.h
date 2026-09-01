@@ -130,7 +130,7 @@ static inline ral_status_t ral_wakeup( const ral_t* radio )
  * @brief Set the radio in sleep mode
  *
  * @param [in] radio          Pointer to radio data structure
- * @param [in] retain_config  If true, radio configuration will be restored upon wakup
+ * @param [in] retain_config  If true, radio configuration will be restored upon wakeup
  *
  * @returns Operation status
  */
@@ -746,7 +746,7 @@ static inline ral_status_t ral_set_gfsk_whitening_seed( const ral_t* radio, cons
 }
 
 /**
- * @brief Initialise LR FHSS
+ * @brief Initialize LR FHSS
  *
  * @param [in] radio  Pointer to radio data structure
  * @param [in] lr_fhss_params  Pointer to lr fhss parameters data structure

@@ -90,7 +90,7 @@ typedef enum
 } lr11xx_radio_gfsk_address_filtering_t;
 
 /*!
- * @brief Chip mode after successfull transmission or reception
+ * @brief Chip mode after successful transmission or reception
  *
  * Unused for RX duty cycle and AutoTxRx operations
  */
@@ -228,7 +228,7 @@ typedef enum
  *
  * If the payload length is known beforehand by both transmitter and receiver, therefore there is no need to send it
  * over the air. Otherwise, setting this parameter to LR11XX_RADIO_GFSK_PKT_VAR_LEN will make the modem to automatically
- * prepand a byte containing the payload length to the the payload on transmitter side. On receiver side, this first
+ * prepend a byte containing the payload length to the the payload on transmitter side. On receiver side, this first
  * byte is read to set the payload length to read.
  *
  * This configuration is only available for GFSK packet types.

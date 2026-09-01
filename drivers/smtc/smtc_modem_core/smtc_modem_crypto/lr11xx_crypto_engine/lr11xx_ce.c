@@ -99,7 +99,7 @@ typedef struct lr11xx_ce_data_s
 } lr11xx_ce_data_t;
 
 /**
- * @brief Struture for lr11xx crypto engine context saving in NVM
+ * @brief Structure for lr11xx crypto engine context saving in NVM
  *
  * @struct lr11xx_ce_context_nvm_t
  */

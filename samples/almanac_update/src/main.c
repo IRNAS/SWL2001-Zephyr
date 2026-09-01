@@ -37,7 +37,7 @@ static void on_modem_almanac_update(smtc_modem_event_almanac_update_status_t sta
 /**
  * @brief Application device management interval in minute
  *
- * The inverval between automatic uplinks of the device management (DM) payload
+ * The interval between automatic uplinks of the device management (DM) payload
  *
  */
 #define APP_MODEM_DM_INTERVAL 1

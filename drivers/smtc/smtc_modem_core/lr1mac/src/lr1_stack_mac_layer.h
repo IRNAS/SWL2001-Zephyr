@@ -179,8 +179,8 @@ typedef struct lr1_stack_mac_s
     uint8_t               rx_fpending_bit_current;
     uint8_t               rx_fopts_length;
     uint8_t               rx_fopts[15];
-    uint8_t               rx_payload_size;  //@note Have to by replace by a fifo objet to manage class c
-    uint8_t               rx_payload[255];  //@note Have to by replace by a fifo objet to manage class c
+    uint8_t               rx_payload_size;  //@note Have to by replace by a fifo object to manage class c
+    uint8_t               rx_payload[255];  //@note Have to by replace by a fifo object to manage class c
     uint8_t               rx_payload_empty;
     user_rx_packet_type_t available_app_packet;
     rx_packet_type_t      valid_rx_packet;
@@ -423,7 +423,7 @@ int32_t lr1_stack_network_next_free_duty_cycle_ms_get( lr1_stack_mac_t* lr1_mac 
  * \brief lr1_stack_toa_get
  * \remark
  * \param [IN]  lr1_stack_mac_t
- * \return toa of the urrent tx frame
+ * \return toa of the current tx frame
  */
 uint32_t lr1_stack_toa_get( lr1_stack_mac_t* lr1_mac );
 

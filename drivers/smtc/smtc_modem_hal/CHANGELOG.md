@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-* [assert] `smtc_modem_hal_assert(expr)` macro 
+* [assert] `smtc_modem_hal_assert(expr)` macro
 * [assert] `smtc_modem_hal_assert_fail()` function
 * [time] `smtc_modem_hal_get_time_in_100us()` function
 * [radio_irq] `smtc_modem_hal_get_radio_irq_timestamp_in_100us()` function

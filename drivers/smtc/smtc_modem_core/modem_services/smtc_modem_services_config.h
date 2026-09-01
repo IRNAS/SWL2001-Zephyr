@@ -59,7 +59,7 @@ extern "C" {
  * @param level     String containing the name of the error level
  * @param ...       Variable argument list
  *
- * @exemple     This exemple uses the libc printf() function as a final backend
+ * @example     This example uses the libc printf() function as a final backend
  */
 #define LOG_PRINT( level, ... )                                                      \
     {                                                                                \

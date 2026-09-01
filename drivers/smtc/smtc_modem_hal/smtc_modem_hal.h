@@ -208,7 +208,7 @@ uint32_t smtc_modem_hal_get_radio_irq_timestamp_in_100us( void );
 /* ------------ Timer management ------------*/
 
 /**
- * @brief Starts the provided timer objet for the given time
+ * @brief Starts the provided timer object for the given time
  *
  * @param [in] milliseconds Number of milliseconds (timer value)
  * @param [in] callback     Callback that will be called in case of timer irq

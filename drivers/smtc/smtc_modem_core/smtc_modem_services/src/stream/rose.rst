@@ -10,7 +10,7 @@ ROSE - Reliable Octet Stream Encoding
 Concepts
 --------
 
-This protocol transports a stream of octects from a LoRaWAN device to a service end point
+This protocol transports a stream of octets from a LoRaWAN device to a service end point
 in the cloud. The transport protocol ensures a high reliability of message delivery by
 sending additional redundancy information.
 
@@ -89,7 +89,7 @@ Applications may choose to drop any extracted record that is damaged,
 e.g. contains any × elements. It may chose to ignore records that contain
 ¿ elements and skip ahead to completed records further down the stream and
 consider or ignore older records once they are completed.
-This leads to out of order procesing of records by but might be desireable
+This leads to out of order processing of records by but might be desirable
 to minimize latency. If out of order processing is not possible then
 it must wait until ¿ elements are resolved into octets or are
 marked as lost (×) in order to process records strictly in order.
@@ -138,7 +138,7 @@ or mark octets as lost.
 In any case, the stream offset is maintained properly
 even under buffer overrun conditions.
 
-Of course, a FIFO overrun should be a rare event, probably happing only
+Of course, a FIFO overrun should be a rare event, probably happening only
 under peak load conditions. Otherwise, the system is conceptually overloaded
 and will only work in a degraded way.
 
@@ -212,7 +212,7 @@ Description of the fields and bits:
  **SHDR.PCTX**
   This flag indicates the absence/presence of the fields **WL** and **SOFFH**.
   The device will enable this bit from time to time so that the server
-  can learn these protocol parameters. Once learnt, the server can track
+  can learn these protocol parameters. Once learned, the server can track
   these values automatically.
 
  **SHDR.SYSC**
@@ -225,20 +225,20 @@ Description of the fields and bits:
   The least significant 16 bit of the stream offset **SOFF**.
 
  **SYSDAT**
-   The systematic data octects. **SYSC** == `M`. It is legal for an **SDATA**
-   message to contain zero systematic data octects. The first octet in this
+   The systematic data octets. **SYSC** == `M`. It is legal for an **SDATA**
+   message to contain zero systematic data octets. The first octet in this
    field has the offset expressed in the corresponding fields **SOFFL** and **SOFFH**.
 
  **REDDAT**
    Redundancy data octets. The field length `N` is calculated as
    `FRMPayload` - `M` - 3 - 3 * **PCTX**. `N` may be zero.
-   The redundancy octects are a combination of the systematic octets immediately
-   preceeding the stream offset as expressed in the corresponding
+   The redundancy octets are a combination of the systematic octets immediately
+   preceding the stream offset as expressed in the corresponding
    fields **SOFFL** and **SOFFH**.
 
  **WL**
   The current window length of the redundancy algorithm.
-  The redundancy algorithm considers the **WL** octects preceeding
+  The redundancy algorithm considers the **WL** octets preceding
   the current stream position.
   ``Note:`` This field is only present if **PCTX** is 1.
 
@@ -458,7 +458,7 @@ Let's assume a **SDATA** message with `K` octets of redundancy information which
 in a LoRaWAN frame with frame counter `FCntUp`.
 Let `i` be the position of the redundancy octet in the field **SDATA.REDDAT**
 and `W[x]` the `xth` octet in the redundancy window. If **SOFF** is the current stream offset
-then `W[0]` is the octect with stream offset **SOFF** - **WL**.
+then `W[0]` is the octet with stream offset **SOFF** - **WL**.
 
 
 Each of the redundancy octets `reddat[i]`, with 0 ≤ `i` < `K`, is constructed in the following way:

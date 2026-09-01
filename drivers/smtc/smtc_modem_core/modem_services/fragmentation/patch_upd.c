@@ -255,13 +255,13 @@ uint8_t VerifySignature( )
     // 2) calculate the signature of the hash e with the private key with ECDSA
     // 3) store signature in the flash after the fw
 
-    // verify agorithm :
+    // verify algorithm :
     // 1) Calculate e = HASH ( m ), where HASH is a cryptographic hash function (AES-128 in our case with key=000000)
     // 2) Check the stored signature with the public key
 
     //    not whole flash: only between 0 and stop addr in flash +  stop addr  (just after irq vectors in flash)
     // 2) encrypted hash is stored just after stop addr  (aes hash )
-    //    encrypt the flash hash with  ecc asymetric algo the hash (paded with zeros if needed) with the public key
+    //    encrypt the flash hash with  ecc asymmetric algo the hash (paded with zeros if needed) with the public key
     //    stored in the rom.
     // 3) encrypted hash from the flash  == with the calculated one
 

@@ -2,10 +2,10 @@
 
 This sample is based on `SWSD001/apps/examples/lorawan`.
 
-All configuration of the sample is done at the top of `main.c`, where LoRaWAN keys and other settings can be set.
+All configuration of the sample is done at the top of `main.c`, where LoRaWAN keys and other
+settings can be set.
 
-## Sample behaviour
+## Sample behavior
 
-The device will attempt to join the LoRaWAN network.
-After joining, an uplink message will be sent every `APP_TX_DUTYCYCLE`.
-Downlinks can also be received.
+The device will attempt to join the LoRaWAN network. After joining, an uplink message will be sent
+every `APP_TX_DUTYCYCLE`. Downlinks can also be received.

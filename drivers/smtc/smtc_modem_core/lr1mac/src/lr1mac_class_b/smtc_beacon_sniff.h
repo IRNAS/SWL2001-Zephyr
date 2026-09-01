@@ -238,7 +238,7 @@ void smtc_beacon_sniff_stop( smtc_lr1_beacon_t* lr1_beacon_obj );
  * @retval SMTC_CLASS_B_BEACON_NOT_ENABLED       beacon acquisition process failed because beacon object is not enabled
  * @retval SMTC_CLASS_B_BEACON_ALREADY_STARTED   beacon acquisition process failed because acquisition is already
  * started
- * @retval  SMTC_CLASS_B_BEACON_NOT_TIME_SYNC    beacon acquisition process failed beacause the epoch time isn't
+ * @retval  SMTC_CLASS_B_BEACON_NOT_TIME_SYNC    beacon acquisition process failed because the epoch time isn't
  * available in the device
  */
 smtc_class_b_beacon_t smtc_beacon_sniff_start( smtc_lr1_beacon_t* lr1_beacon_obj );
@@ -261,7 +261,7 @@ void smtc_beacon_sniff_get_metadata( smtc_lr1_beacon_t* lr1_beacon_obj, smtc_bea
 
 /**
  * @brief Decode the epoch time field in beacon payload
- * @remark the beacon payload format is dependant of the spreading factor
+ * @remark the beacon payload format is dependent of the spreading factor
  * @param [in] beacon_payload payload inside the beacon
  * @param [in] beacon_sf      the spreading factor of the beacon
  * @return uint32_t      the epoch time defined in seconds
@@ -270,7 +270,7 @@ uint32_t smtc_decode_beacon_epoch_time( uint8_t* beacon_payload, uint8_t beacon_
 
 /**
  * @brief Decode the param field in beacon payload
- * @remark the beacon payload format is dependant of the spreading factor
+ * @remark the beacon payload format is dependent of the spreading factor
  * @param beacon_payload   payload inside the beacon
  * @param beacon_sf the spreading factor of the beacon
  * @return uint8_t return the param field inside the beacon payload

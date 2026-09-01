@@ -111,7 +111,7 @@ lr11xx_hal_status_t lr11xx_hal_write( const void* context, const uint8_t* comman
  *
  * @returns Operation status
  *
- * @remark Some hardware SPI implementations write arbitary values on the MOSI line while reading. If this is done on
+ * @remark Some hardware SPI implementations write arbitrary values on the MOSI line while reading. If this is done on
  * the LR11XX, non-zero values may be interpreted as commands. This driver does not exploit this functionality, and
  * expects that zeros be sent on the MOSI line when this command is reading the command response data.
  */

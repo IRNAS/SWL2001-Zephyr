@@ -229,7 +229,7 @@ gfsk_bw_t gfsk_bw[] = {
  *
  * @param [in] context Chip implementation context.
  * @param [in] pkt_type The modulation type (G)FSK/LoRa
- * @param [in] bw In case of LoRa modulation the bandwith must be specified
+ * @param [in] bw In case of LoRa modulation the bandwidth must be specified
  *
  * @returns Operation status
  */

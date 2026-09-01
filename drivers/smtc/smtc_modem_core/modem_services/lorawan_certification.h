@@ -64,7 +64,7 @@ extern "C" {
 #define LORAWAN_CERTIFICATION_PACKAGE_VERSION 1
 
 /**
- * @brief Commandes length in byte(s)
+ * @brief Commands length in byte(s)
  */
 #define LORAWAN_CERTIFICATION_PACKAGE_VERSION_REQ_SIZE 1
 #define LORAWAN_CERTIFICATION_PACKAGE_VERSION_ANS_SIZE 2

@@ -66,7 +66,7 @@ extern "C" {
 #define ADR_ACK_DELAY_S_BAND_2G                (32)
 #define ACK_TIMEOUT_S_BAND_2G                  (2)             // +/- 1 s (random delay between 1 and 3 seconds)
 #define FREQMIN_S_BAND_2G                      (2008450000)    // Hz
-#define FREQMAX_S_BAND_2G                      (2008450000)    // Hz 
+#define FREQMAX_S_BAND_2G                      (2008450000)    // Hz
 #define RX2_FREQ_S_BAND_2G                     (2008450000)    // Hz
 #define FREQUENCY_FACTOR_S_BAND_2G             (200)           // MHz/200 when coded over 24 bits
 #define RX2DR_INIT_S_BAND_2G                   (0)

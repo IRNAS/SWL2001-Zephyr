@@ -167,7 +167,7 @@ void clock_sync_callback( clock_sync_ctx_t* ctx, uint32_t rx_timestamp_s )
         // Synchronized with the network
         if( clock_sync_is_time_valid( ctx ) == false )
         {
-            // synchronisation lost
+            // synchronization lost
             // Send event
             increment_asynchronous_msgnumber( SMTC_MODEM_EVENT_TIME, SMTC_MODEM_EVENT_TIME_NOT_VALID );
 
@@ -475,8 +475,8 @@ clock_sync_ret_t clock_sync_request( clock_sync_ctx_t* ctx )
         uint32_t target_send_time = smtc_modem_hal_get_time_in_s( ) + smtc_modem_hal_get_random_nb_in_range( 1, 3 );
         uint8_t  app_time_ans_required = false;
         uint8_t  tx_buff_offset        = 0;
-        // AnsRequired bit set to one in both cases: synchronisation lost or the last 30 days
-        // synchronisation lost
+        // AnsRequired bit set to one in both cases: synchronization lost or the last 30 days
+        // synchronization lost
         if( ( !clock_sync_is_done( ctx ) ) ||
             ( clock_sync_is_done( ctx ) &&
               ( ( smtc_modem_hal_get_time_in_s( ) - alc_sync_get_timestamp_last_correction_s( ctx->alc_ctx ) ) >

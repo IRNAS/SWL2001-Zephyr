@@ -52,7 +52,7 @@ uint32_t compute_crc_fw( void )
 {
 #if defined( LR1110_MODEM_E )
     uint32_t crctmp =
-        crc( ( uint8_t* ) ( START_FLASH_ADRESS ),
+        crc( ( uint8_t* ) ( START_FLASH_ADDRESS ),
              ( *( uint32_t* ) FLASH_PROG_LEN ) * 4 );  // prog length in word is store in start_fw_flash_address
     return crctmp;
 #else

@@ -2061,7 +2061,7 @@ uint8_t smtc_real_get_max_tx_channel_dr( lr1_stack_mac_t* lr1_mac )
 
             if( max_dr == const_max_tx_dr )
             {
-                break;  // DR found is the bigest
+                break;  // DR found is the biggest
             }
         }
     }
@@ -2982,7 +2982,7 @@ void smtc_real_get_rx_window_parameters( lr1_stack_mac_t* lr1_mac, uint8_t datar
     *rx_timeout_preamble_locked_in_ms = 3000;
 
 #if defined( SX128X )
-    // rx timeout is used to simuate a symb timeout in sx128x (need to open preamb + sync +header)
+    // rx timeout is used to simulate a symb timeout in sx128x (need to open preamb + sync +header)
     *rx_timeout_preamble_locked_in_ms =
         MAX( ceilf( ( ( ( float ) *rx_window_symb + 16.25f ) * tsymbol_us ) ) / 1000, MIN_RX_WINDOW_DURATION_MS );
     *rx_timeout_symb_in_ms = *rx_timeout_preamble_locked_in_ms;
